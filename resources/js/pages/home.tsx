@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import SiteHeader from '@/components/SiteHeader';
 import { Heart, Search, ShoppingCart, User } from 'lucide-react';
 
 export default function Home() {
@@ -7,36 +8,7 @@ export default function Home() {
             <Head title="Home" />
             <div className="bg-gray-100 text-gray-800">
                 {/* Header */}
-                <header className="bg-white shadow-md">
-                    <div className="container mx-auto flex items-center justify-between p-4">
-                        <div className="flex items-center">
-                            <img src="/images/estwo-logo.png" alt="Estwo Computer" className="h-10 w-auto" />
-                            <h1 className="ml-4 text-2xl font-bold">ESTWO COMPUTER</h1>
-                        </div>
-                        <nav className="hidden items-center space-x-8 md:flex">
-                            <Link href="/" className="text-gray-600 hover:text-black">Home</Link>
-                            <Link href="/catalog" className="text-gray-600 hover:text-black">Catalog</Link>
-                            <Link href="/services" className="text-gray-600 hover:text-black">Services</Link>
-                        </nav>
-                        <div className="flex items-center space-x-4">
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="Search"
-                                    className="rounded-full border border-gray-300 bg-gray-100 py-2 pl-4 pr-10 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-black"
-                                />
-                                <Search className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400" size={20} />
-                            </div>
-                            <Link href="/wishlist" className="text-gray-600 hover:text-black">
-                                <Heart size={24} />
-                            </Link>
-                            <Link href="/profile" className="text-gray-600 hover:text-black">
-                                <User size={24} />
-                            </Link>
-                        </div>
-                    </div>
-                </header>
-
+                <SiteHeader /> {/* <-- Gunakan komponen di sini */}
                 {/* Main Content */}
                 <main className="container mx-auto p-4">
                     {/* Promo Section */}

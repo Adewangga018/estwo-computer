@@ -1,6 +1,8 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+// resources/js/lib/utils.ts
 
-export function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
+// Utility function: cn (classNames)
+export function cn(...classes: (string | undefined | null | false)[]): string {
+    return classes.filter(Boolean).join(' ');
 }
+
+// Tambahkan util lain jika diperlukan
