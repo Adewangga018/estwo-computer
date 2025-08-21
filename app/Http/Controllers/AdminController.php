@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use App\Models\Product;
 
 class AdminController extends Controller
 {
@@ -107,11 +108,10 @@ class AdminController extends Controller
      */
     public function products()
     {
-        // Anda perlu membuat Model 'Product' terlebih dahulu
-        // $products = \App\Models\Product::paginate(10);
+        $products = Product::latest()->paginate(10);
 
         return Inertia::render('admin/ProductsMonitoring', [
-            'products' => [] // Kirim array kosong untuk sementara
+            'products' => $products
         ]);
     }
 

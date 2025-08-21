@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('completenessProduct', 255)->nullable();
             $table->text('specs')->nullable();
             $table->text('disability')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

@@ -1,151 +1,208 @@
-import { Head } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableRow, TableCell, TableHead, TableHeader, TableBody } from '@/components/ui';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
-// Tipe data untuk produk, sesuaikan dengan model Product Anda
+// Tipe data lengkap untuk produk
 interface Product {
     idProduct: number;
     nameProduct: string;
-    typeProduct: string;
+    typeProduct: string | null;
+    detailProduct: string | null;
     stockProduct: number;
+    brandProduct: string | null;
     price: number;
+    grade: string | null;
+    completenessProduct: string | null;
+    specs: string | null;
+    disability: string | null;
+    photo: string | null;
+    created_at: string;
+    updated_at: string;
 }
 
-// Anda perlu mengirimkan data products dari controller
-export default function ProductsMonitoring({ products }: { products: Product[] }) {
-    // Data dummy jika products belum ada
-    const dummyProducts: Product[] = [
-        { idProduct: 1, nameProduct: 'Laptop Gaming Legion', typeProduct: 'Laptop', stockProduct: 10, price: 15000000 },
-        { idProduct: 2, nameProduct: 'Macbook Pro M3', typeProduct: 'Laptop', stockProduct: 5, price: 25000000 },
-    ];
-    const productList = products && products.length > 0 ? products : dummyProducts;
+// Tipe untuk data paginasi dari Laravel
+interface PaginatedProducts {
+    data: Product[];
+    [key: string]: any;
+}
 
-    // State untuk modal dan produk yang dipilih
+export default function ProductsMonitoring({ products }: { products: PaginatedProducts }) {
+    const productList = products?.data ?? [];
+
     const [showCreate, setShowCreate] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
+    const [showDetail, setShowDetail] = useState(false); // State baru untuk modal detail
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-    // State untuk form create dan edit
-    const [createForm, setCreateForm] = useState({
-        nameProduct: '',
-        typeProduct: '',
-        stockProduct: 0,
-        price: 0
-    });
-    const [editForm, setEditForm] = useState({
-        nameProduct: '',
-        typeProduct: '',
-        stockProduct: 0,
-        price: 0
+    // Form hook untuk membuat produk baru
+    const { data: createData, setData: setCreateData, post: storeProduct, processing: createProcessing, errors: createErrors, reset: resetCreateForm } = useForm({
+        nameProduct: '', typeProduct: 'Laptop', detailProduct: '', stockProduct: 0, brandProduct: '', price: 0, grade: 'A', completenessProduct: 'Satu set', specs: '', disability: '', photo: null as File | null,
     });
 
-    // Handler modal
-    const handleCreate = () => setShowCreate(true);
+    // Form hook untuk mengedit produk
+    const { data: editData, setData: setEditData, post: updateProduct, processing: editProcessing, errors: editErrors } = useForm({
+        nameProduct: '', typeProduct: '', detailProduct: '', stockProduct: 0, brandProduct: '', price: 0, grade: '', completenessProduct: '', specs: '', disability: '', photo: null as File | null, _method: 'POST'
+    });
+
+    // Handlers untuk membuka modal
+    const handleCreate = () => { resetCreateForm(); setShowCreate(true); };
+    const handleDelete = (product: Product) => { setSelectedProduct(product); setShowDelete(true); };
+    const handleDetail = (product: Product) => { setSelectedProduct(product); setShowDetail(true); }; // Handler baru
     const handleEdit = (product: Product) => {
         setSelectedProduct(product);
-        setEditForm({
+        setEditData({
             nameProduct: product.nameProduct,
-            typeProduct: product.typeProduct,
+            typeProduct: product.typeProduct || '',
+            detailProduct: product.detailProduct || '',
             stockProduct: product.stockProduct,
-            price: product.price
+            brandProduct: product.brandProduct || '',
+            price: product.price,
+            grade: product.grade || 'A',
+            completenessProduct: product.completenessProduct || 'Satu set',
+            specs: product.specs || '',
+            disability: product.disability || '',
+            photo: null,
+            _method: 'POST'
         });
         setShowEdit(true);
     };
-    const handleDelete = (product: Product) => {
-        setSelectedProduct(product);
-        setShowDelete(true);
-    };
+
     const closeModal = () => {
         setShowCreate(false);
         setShowEdit(false);
         setShowDelete(false);
+        setShowDetail(false); // Tutup juga modal detail
         setSelectedProduct(null);
     };
+
+    // Handlers untuk submit form
+    const handleCreateSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        storeProduct(route('admin.products.store'), { onSuccess: () => closeModal() });
+    };
+
+    const handleEditSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedProduct) return;
+        updateProduct(route('admin.products.update', selectedProduct.idProduct), { onSuccess: () => closeModal() });
+    };
+
+    const handleDeleteConfirm = () => {
+        if (!selectedProduct) return;
+        router.delete(route('admin.products.destroy', selectedProduct.idProduct), { onSuccess: () => closeModal() });
+    };
+
+    const renderFormFields = (data: any, setData: Function, errors: any) => (
+        <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div><Label htmlFor="nameProduct">Product Name</Label><Input id="nameProduct" value={data.nameProduct} onChange={e => setData('nameProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.nameProduct}</p></div>
+                <div><Label htmlFor="brandProduct">Brand</Label><Input id="brandProduct" value={data.brandProduct} onChange={e => setData('brandProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.brandProduct}</p></div>
+                <div><Label htmlFor="typeProduct">Type</Label><Input id="typeProduct" value={data.typeProduct} onChange={e => setData('typeProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.typeProduct}</p></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div><Label htmlFor="stockProduct">Stock</Label><Input id="stockProduct" type="number" value={data.stockProduct} onChange={e => setData('stockProduct', Number(e.target.value))} /><p className="text-red-500 text-sm mt-1">{errors.stockProduct}</p></div>
+                <div><Label htmlFor="price">Price</Label><Input id="price" type="number" value={data.price} onChange={e => setData('price', Number(e.target.value))} /><p className="text-red-500 text-sm mt-1">{errors.price}</p></div>
+                <div><Label htmlFor="grade">Grade</Label><select id="grade" className="w-full border p-2 rounded-md h-10" value={data.grade} onChange={e => setData('grade', e.target.value)}><option>A</option><option>B</option><option>C</option></select><p className="text-red-500 text-sm mt-1">{errors.grade}</p></div>
+            </div>
+            <div><Label htmlFor="completenessProduct">Completeness</Label><select id="completenessProduct" className="w-full border p-2 rounded-md h-10" value={data.completenessProduct} onChange={e => setData('completenessProduct', e.target.value)}><option>Satu set</option><option>Batangan</option></select><p className="text-red-500 text-sm mt-1">{errors.completenessProduct}</p></div>
+            <div><Label htmlFor="detailProduct">Description</Label><Textarea id="detailProduct" value={data.detailProduct} onChange={e => setData('detailProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.detailProduct}</p></div>
+            <div><Label htmlFor="specs">Specifications</Label><Textarea id="specs" value={data.specs} onChange={e => setData('specs', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.specs}</p></div>
+            <div><Label htmlFor="disability">Disability</Label><Textarea id="disability" value={data.disability} onChange={e => setData('disability', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.disability}</p></div>
+            <div><Label htmlFor="photo">Product Photo</Label><Input id="photo" type="file" onChange={e => setData('photo', e.target.files ? e.target.files[0] : null)} /><p className="text-red-500 text-sm mt-1">{errors.photo}</p></div>
+        </div>
+    );
+
+    const DetailRow = ({ label, value }: { label: string, value: string | number | null }) => (
+        <div className="grid grid-cols-3 gap-4 border-b py-2">
+            <dt className="font-semibold text-gray-600">{label}</dt>
+            <dd className="col-span-2 text-gray-800">{value || '-'}</dd>
+        </div>
+    );
 
     return (
         <>
             <Head title="Products Monitoring" />
-            <div className="mx-auto py-8 bg-gray-100">
+            <div className="container mx-auto py-8">
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="text-2xl">Products Monitoring</CardTitle>
-                    </CardHeader>
+                    <CardHeader><CardTitle className="text-2xl">Products Monitoring</CardTitle></CardHeader>
                     <CardContent>
-                        <div className="mb-4">
-                            <Button className="text-white bg-yellow-500 hover:bg-yellow-600" onClick={handleCreate}>Create New Product</Button>
+                        <div className="mb-4"><Button className="text-white bg-yellow-500 hover:bg-yellow-600" onClick={handleCreate}>Create New Product</Button></div>
+                        <div className="overflow-x-auto justify-center text-center rounded-lg border">
+                            <Table>
+                                <TableHeader><TableRow><TableHead>ID</TableHead><TableHead>Photo</TableHead><TableHead>Product Name</TableHead><TableHead>Type</TableHead><TableHead>Stock</TableHead><TableHead>Price</TableHead><TableHead className="text-center justify-center">Actions</TableHead></TableRow></TableHeader>
+                                <TableBody>
+                                    {productList.length > 0 ? productList.map((product) => (
+                                        <TableRow key={product.idProduct}>
+                                            <TableCell>{product.idProduct}</TableCell>
+                                            <TableCell>{product.photo ? <img src={`/storage/${product.photo}`} alt={product.nameProduct} className="h-16 w-16 object-cover rounded-md" /> : <div className="h-16 w-16 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">No Photo</div>}</TableCell>
+                                            <TableCell className="font-medium">{product.nameProduct}</TableCell>
+                                            <TableCell>{product.typeProduct}</TableCell>
+                                            <TableCell>{product.stockProduct}</TableCell>
+                                            <TableCell>Rp {Number(product.price).toLocaleString('id-ID')}</TableCell>
+                                            <TableCell className="text-center">
+                                                <div className="flex gap-2 justify-center">
+                                                    <Button className="bg-gray-500 hover:bg-gray-600 text-white" size="sm" onClick={() => handleDetail(product)}>Detail</Button>
+                                                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-white" size="sm" onClick={() => handleEdit(product)}>Edit</Button>
+                                                    <Button variant="destructive" size="sm" onClick={() => handleDelete(product)}>Delete</Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    )) : <TableRow><TableCell colSpan={7} className="text-center h-24">No products found.</TableCell></TableRow>}
+                                </TableBody>
+                            </Table>
                         </div>
-                        <Table className="text-center align-middle"
-                            headers={["ID", "Product Name", "Type", "Stock", "Price", "Actions"]}
-                        >
-                            {productList.map((product) => (
-                                <TableRow key={product.idProduct}>
-                                    <TableCell>{product.idProduct}</TableCell>
-                                    <TableCell>{product.nameProduct}</TableCell>
-                                    <TableCell>{product.typeProduct}</TableCell>
-                                    <TableCell>{product.stockProduct}</TableCell>
-                                    <TableCell>Rp {product.price.toLocaleString('id-ID')}</TableCell>
-                                    <TableCell className="p-0 align-middle text-center">
-                                        <div className="flex gap-4 justify-center items-center">
-                                            <Button className="text-white bg-yellow-500 hover:bg-yellow-600" variant="outline" size="sm" onClick={() => handleEdit(product)}>Edit</Button>
-                                            <Button className="bg-red-500 hover:bg-red-600" variant="destructive" size="sm" onClick={() => handleDelete(product)}>Delete</Button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </Table>
+
                         {/* Modal Create */}
-                        {showCreate && (
-                            <div className="fixed inset-0 bg-gray-100 bg-opacity-40 flex items-center justify-center z-50">
-                                <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                                    <h2 className="text-xl font-bold mb-4">Create Product</h2>
-                                    <form>
-                                        <input className="border p-2 w-full mb-2" placeholder="Product Name" value={createForm.nameProduct} onChange={e => setCreateForm(f => ({ ...f, nameProduct: e.target.value }))} />
-                                        <input className="border p-2 w-full mb-2" placeholder="Type" value={createForm.typeProduct} onChange={e => setCreateForm(f => ({ ...f, typeProduct: e.target.value }))} />
-                                        <input className="border p-2 w-full mb-2" placeholder="Stock" type="number" value={createForm.stockProduct} onChange={e => setCreateForm(f => ({ ...f, stockProduct: Number(e.target.value) }))} />
-                                        <input className="border p-2 w-full mb-2" placeholder="Price" type="number" value={createForm.price} onChange={e => setCreateForm(f => ({ ...f, price: Number(e.target.value) }))} />
-                                        <div className="flex gap-2 justify-end mt-4">
-                                            <Button type="button" variant="outline" onClick={closeModal}>Cancel</Button>
-                                            <Button className="bg-yellow-500 hover:bg-yellow-600" type="submit" variant="default">Create</Button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        )}
+                        {showCreate && <div className="fixed inset-0 bg-gray-100 shadow-lg bg-opacity-50 flex items-center justify-center z-50 p-4"><div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"><h2 className="text-2xl font-bold mb-6">Create New Product</h2><form onSubmit={handleCreateSubmit}>{renderFormFields(createData, setCreateData, createErrors)}<div className="flex gap-2 justify-end pt-4"><Button type="button" variant="outline" onClick={closeModal}>Cancel</Button><Button className="bg-yellow-500 hover:bg-yellow-600" type="submit" disabled={createProcessing}>{createProcessing ? 'Creating...' : 'Create'}</Button></div></form></div></div>}
+
                         {/* Modal Edit */}
-                        {showEdit && selectedProduct && (
-                            <div className="fixed inset-0 bg-gray-100 bg-opacity-40 flex items-center justify-center z-50">
-                                <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                                    <h2 className="text-xl font-bold mb-4">Edit Product</h2>
-                                    <form>
-                                        <input className="border p-2 w-full mb-2" placeholder="Product Name" value={editForm.nameProduct} onChange={e => setEditForm(f => ({ ...f, nameProduct: e.target.value }))} />
-                                        <input className="border p-2 w-full mb-2" placeholder="Type" value={editForm.typeProduct} onChange={e => setEditForm(f => ({ ...f, typeProduct: e.target.value }))} />
-                                        <input className="border p-2 w-full mb-2" placeholder="Stock" type="number" value={editForm.stockProduct} onChange={e => setEditForm(f => ({ ...f, stockProduct: Number(e.target.value) }))} />
-                                        <input className="border p-2 w-full mb-2" placeholder="Price" type="number" value={editForm.price} onChange={e => setEditForm(f => ({ ...f, price: Number(e.target.value) }))} />
-                                        <div className="flex gap-2 justify-end mt-4">
-                                            <Button type="button" variant="outline" onClick={closeModal}>Cancel</Button>
-                                            <Button className="bg-yellow-500 hover:bg-yellow-600" type="submit" variant="default">Save</Button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        )}
+                        {showEdit && selectedProduct && <div className="fixed inset-0 bg-gray-100 shadow-lg bg-opacity-50 flex items-center justify-center z-50 p-4"><div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"><h2 className="text-2xl font-bold mb-6">Edit Product: {selectedProduct.nameProduct}</h2><form onSubmit={handleEditSubmit}>{renderFormFields(editData, setEditData, editErrors)}<div className="flex gap-2 justify-end pt-4"><Button type="button" variant="outline" onClick={closeModal}>Cancel</Button><Button className="bg-yellow-500 hover:bg-yellow-600 text-white" type="submit" disabled={editProcessing}>{editProcessing ? 'Updating...' : 'Update'}</Button></div></form></div></div>}
+
                         {/* Modal Delete */}
-                        {showDelete && selectedProduct && (
-                            <div className="fixed inset-0 bg-gray-100 bg-opacity-40 flex items-center justify-center z-50">
-                                <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                                    <h2 className="text-xl font-bold mb-4 text-red-500">Delete Product</h2>
-                                    <p>Are you sure you want to delete <span className="font-semibold">{selectedProduct.nameProduct}</span>?</p>
-                                    <div className="flex gap-2 justify-end mt-4">
-                                        <Button type="button" variant="outline" onClick={closeModal}>Cancel</Button>
-                                        <Button className="bg-red-500 hover:bg-red-600" type="button" variant="destructive">Delete</Button>
+                        {showDelete && selectedProduct && <div className="fixed inset-0 bg-gray-100 shadow-lg bg-opacity-50 flex items-center justify-center z-50 p-4"><div className="bg-white rounded-lg p-6 w-full max-w-md"><h2 className="text-xl font-bold mb-4">Confirm Deletion</h2><p>Are you sure you want to delete product: <strong>{selectedProduct.nameProduct}</strong>? This action cannot be undone.</p><div className="flex gap-2 justify-end mt-6"><Button variant="outline" onClick={closeModal}>Cancel</Button><Button variant="destructive" onClick={handleDeleteConfirm}>Delete</Button></div></div></div>}
+
+                        {/* Modal Detail */}
+                        {showDetail && selectedProduct && (
+                            <div className="fixed inset-0 bg-gray-100 bg-opacity-50 flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                                    <h2 className="text-2xl font-bold mb-4 border-b pb-2">Product Detail</h2>
+                                    <div className="flex flex-col md:flex-row gap-6">
+                                        <div className="md:w-1/3">
+                                            {selectedProduct.photo ?
+                                                <img src={`/storage/${selectedProduct.photo}`} alt={selectedProduct.nameProduct} className="w-full h-auto object-cover rounded-lg shadow-md" /> :
+                                                <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">No Photo</div>
+                                            }
+                                        </div>
+                                        <div className="md:w-2/3">
+                                            <dl className="text-sm">
+                                                <DetailRow label="Product ID" value={selectedProduct.idProduct} />
+                                                <DetailRow label="Product Name" value={selectedProduct.nameProduct} />
+                                                <DetailRow label="Brand" value={selectedProduct.brandProduct} />
+                                                <DetailRow label="Type" value={selectedProduct.typeProduct} />
+                                                <DetailRow label="Price" value={`Rp ${Number(selectedProduct.price).toLocaleString('id-ID')}`} />
+                                                <DetailRow label="Stock" value={selectedProduct.stockProduct} />
+                                                <DetailRow label="Grade" value={selectedProduct.grade} />
+                                                <DetailRow label="Completeness" value={selectedProduct.completenessProduct} />
+                                            </dl>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 space-y-2 text-sm">
+                                        <div><h3 className="font-semibold text-gray-600">Description</h3><p className="text-gray-800 bg-gray-50 p-2 rounded">{selectedProduct.detailProduct || '-'}</p></div>
+                                        <div><h3 className="font-semibold text-gray-600">Specifications</h3><p className="text-gray-800 bg-gray-50 p-2 rounded">{selectedProduct.specs || '-'}</p></div>
+                                        <div><h3 className="font-semibold text-gray-600">Disability</h3><p className="text-gray-800 bg-gray-50 p-2 rounded">{selectedProduct.disability || '-'}</p></div>
+                                    </div>
+                                    <div className="flex justify-end mt-6">
+                                        <Button variant="outline" onClick={closeModal}>Close</Button>
                                     </div>
                                 </div>
                             </div>
                         )}
-                        {/* Tambahkan komponen pagination di sini jika diperlukan */}
                     </CardContent>
                 </Card>
             </div>

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProductController;
 
 
 // Logout route
@@ -49,12 +50,12 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
     Route::put('/users/{idUser}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::delete('/users/{idUser}', [AdminController::class, 'deleteUser'])->name('users.delete');
+
+    // Rute Produk
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::post('/products/{product}', [ProductController::class, 'update'])->name('products.update'); // Tambahkan ini (menggunakan POST untuk file upload)
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy'); // Tambahkan ini
 });
 
-Route::get('/catalog', function () {
-    // Contoh data produk, bisa diganti dengan data dari database
-    $products = [];
-    return Inertia::render('Catalog', [
-        'products' => $products
-    ]);
-});
+Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
+Route::get('/catalog/{product}', [CatalogController::class, 'show'])->name('catalog.show');

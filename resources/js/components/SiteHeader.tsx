@@ -38,7 +38,7 @@ export default function SiteHeader() {
                     <div className="relative">
                         <input
                             type="text"
-                            placeholder="Search"
+                            placeholder="Search Product"
                             className="rounded-full border border-gray-300 text-black bg-gray-100 py-2 pl-4 pr-10 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-black"
                         />
                         <Search className="absolute right-3 top-1/2 -translate-y-1/2 transform text-black" size={20} />
