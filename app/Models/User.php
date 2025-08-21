@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @method bool save()
+ * @method bool delete()
+ */
 class User extends Authenticatable
 {
     protected $primaryKey = 'idUser';

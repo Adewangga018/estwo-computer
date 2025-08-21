@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
-        <script>
+        {{-- <script>
             (function() {
                 const appearance = '{{ $appearance ?? "system" }}';
 
@@ -17,7 +18,7 @@
                     }
                 }
             })();
-        </script>
+        </script> --}}
 
         {{-- Inline style to set the HTML background color based on our theme in app.css --}}
         <style>

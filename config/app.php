@@ -14,6 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    // Tambahan konfigurasi untuk password admin
+    'admin_password' => env('ADMIN_PASSWORD', 'Bismillah212'),
 
     /*
     |--------------------------------------------------------------------------
