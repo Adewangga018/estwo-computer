@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import FilterSidebar from '@/components/FilterSidebar';
 
-// Definisikan tipe data Product, tambahkan detailProduct dan created_at
+// Definisikan tipe data Product
 interface Product {
     idProduct: number;
     nameProduct: string;
@@ -13,36 +13,68 @@ interface Product {
     stockProduct: number;
     photo: string | null;
     grade: string | null;
-    detailProduct: string | null; // Ditambahkan
-    created_at: string; // Ditambahkan
+    detailProduct: string | null;
+    created_at: string;
 }
+
+// Komponen kartu produk yang bisa digunakan kembali
+const ProductCard = ({ product }: { product: Product }) => {
+    const formatDate = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('id-ID', options);
+    };
+
+    return (
+        <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg h-full">
+            <CardHeader className="p-0 relative">
+                <div className="aspect-square w-full bg-gray-200">
+                    {product.photo ? <img src={`/storage/${product.photo}`} alt={product.nameProduct} className="w-full h-full object-cover"/> : <div className="w-full h-full flex items-center justify-center text-gray-500">No Image</div>}
+                </div>
+                {product.grade && <Badge className="absolute top-2 right-2 bg-yellow-500 text-white border-none">Grade {product.grade}</Badge>}
+            </CardHeader>
+            <CardContent className="p-4 flex-grow flex flex-col">
+                <CardTitle className="text-lg font-semibold mb-2 text-gray-800">{product.nameProduct}</CardTitle>
+                <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-grow">{product.detailProduct || 'No description available.'}</p>
+                <p className="text-xl font-bold text-gray-900">Rp {Number(product.price).toLocaleString('id-ID')}</p>
+                <div className="flex justify-between text-sm text-gray-500 mt-1">
+                    <span>Stock: {product.stockProduct > 0 ? product.stockProduct : 'Habis'}</span>
+                    <span className="font-semibold">{formatDate(product.created_at)}</span>
+                </div>
+            </CardContent>
+            <CardFooter className="p-4 pt-0 mt-auto">
+                <Link href={route('catalog.show', product.idProduct)} className="w-full">
+                    <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white" disabled={product.stockProduct === 0}>{product.stockProduct > 0 ? 'View Details' : 'Not Available'}</Button>
+                </Link>
+            </CardFooter>
+        </Card>
+    );
+};
 
 // Terima 'products' dan 'filters' dari controller
 export default function Catalog({ products, filters }: { products: Product[], filters: Record<string, string> }) {
 
+    // Gunakan useForm untuk mengelola state filter, gabungkan dengan search dari header
     const { data, setData, get, processing } = useForm({
+        search: filters.search || '',
         price: filters.price || '',
         specs: filters.specs || '',
         brandProduct: filters.brandProduct || '',
         stockProduct: filters.stockProduct || '',
     });
 
+    // Fungsi untuk mengirim filter ke server
     const submitFilter = (e: React.FormEvent) => {
         e.preventDefault();
+        // Gunakan 'get' untuk mengirim data sebagai query parameter
         get(route('catalog.index'), {
             preserveState: true,
             replace: true,
         });
     };
 
+    // Fungsi untuk mereset filter (menghapus semua query parameter)
     const resetFilters = () => {
         router.get(route('catalog.index'));
-    };
-
-    // Fungsi untuk memformat tanggal
-    const formatDate = (dateString: string) => {
-        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('id-ID', options);
     };
 
     return (
@@ -66,34 +98,7 @@ export default function Catalog({ products, filters }: { products: Product[], fi
                             {products.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                                     {products.map((product) => (
-                                        <Card key={product.idProduct} className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg h-full">
-                                            <CardHeader className="p-0 relative">
-                                                <div className="aspect-square w-full bg-gray-200">
-                                                    {product.photo ? <img src={`/storage/${product.photo}`} alt={product.nameProduct} className="w-full h-full object-cover"/> : <div className="w-full h-full flex items-center justify-center text-gray-500">No Image</div>}
-                                                </div>
-                                                {product.grade && <Badge className="absolute top-2 right-2 bg-yellow-500 text-white border-none">Grade {product.grade}</Badge>}
-                                            </CardHeader>
-                                            <CardContent className="flex-grow flex flex-col">
-                                                <CardTitle className="text-lg font-semibold mb-2 text-gray-800">{product.nameProduct}</CardTitle>
-                                                {/* Menambahkan deskripsi produk dengan pemotongan teks */}
-                                                <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-grow">
-                                                    {product.detailProduct || 'No description available.'}
-                                                </p>
-                                                <p className="text-xl font-bold text-gray-900">
-                                                    Rp {Number(product.price).toLocaleString('id-ID')}
-                                                </p>
-                                                <div className="flex justify-between text-sm text-gray-500 mt-1">
-                                                    <span>Stock: {product.stockProduct > 0 ? product.stockProduct : 'Habis'}</span>
-                                                    {/* Menambahkan tanggal rilis */}
-                                                    <span className="font-bold text-gray-500">{formatDate(product.created_at)}</span>
-                                                </div>
-                                            </CardContent>
-                                            <CardFooter>
-                                                <Link href={route('catalog.show', product.idProduct)} className="w-full">
-                                                    <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white" disabled={product.stockProduct === 0}>{product.stockProduct > 0 ? 'View Details' : 'Not Available'}</Button>
-                                                </Link>
-                                            </CardFooter>
-                                        </Card>
+                                        <ProductCard key={product.idProduct} product={product} />
                                     ))}
                                 </div>
                             ) : (

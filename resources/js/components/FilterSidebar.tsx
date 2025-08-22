@@ -25,6 +25,7 @@ export default function FilterSidebar({ data, setData, submit, reset, processing
                 <CardTitle className="text-2xl font-bold">Filter</CardTitle>
             </CardHeader>
             <CardContent>
+                {/* Form akan memanggil fungsi submit saat dikirim */}
                 <form onSubmit={submit} className="space-y-6">
                     <div className="space-y-2">
                         <Label htmlFor="price">Harga</Label>
@@ -63,7 +64,7 @@ export default function FilterSidebar({ data, setData, submit, reset, processing
                         />
                     </div>
                     <div className="flex space-x-2 pt-4">
-                        <Button onClick={reset} disabled={processing}>
+                        <Button type="button" variant="secondary" className="w-full" onClick={reset} disabled={processing}>
                             Reset
                         </Button>
                         <Button type="submit" className="w-full bg-yellow-500 text-white hover:bg-yellow-600" disabled={processing}>
