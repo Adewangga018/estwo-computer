@@ -9,6 +9,8 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\HomeController;
 
 
 // Logout route
@@ -24,14 +26,17 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 
 
-Route::get('/home', function () {
-    return Inertia::render('Home');
-});
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Account routes
 Route::get('/account', [AccountController::class, 'show'])->name('account');
 Route::post('/account/edit', [AccountController::class, 'edit'])->name('account.edit');
 Route::post('/account/delete', [AccountController::class, 'delete'])->name('account.delete');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/{product}', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
+});
 
 
 Route::get('/', function () {

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import FilterSidebar from '@/components/FilterSidebar';
 
-// Definisikan tipe data Product
+// Definisikan tipe data Product, tambahkan detailProduct dan created_at
 interface Product {
     idProduct: number;
     nameProduct: string;
@@ -13,12 +13,13 @@ interface Product {
     stockProduct: number;
     photo: string | null;
     grade: string | null;
+    detailProduct: string | null; // Ditambahkan
+    created_at: string; // Ditambahkan
 }
 
 // Terima 'products' dan 'filters' dari controller
 export default function Catalog({ products, filters }: { products: Product[], filters: Record<string, string> }) {
 
-    // Gunakan useForm untuk mengelola state filter
     const { data, setData, get, processing } = useForm({
         price: filters.price || '',
         specs: filters.specs || '',
@@ -26,7 +27,6 @@ export default function Catalog({ products, filters }: { products: Product[], fi
         stockProduct: filters.stockProduct || '',
     });
 
-    // Fungsi untuk mengirim filter ke server
     const submitFilter = (e: React.FormEvent) => {
         e.preventDefault();
         get(route('catalog.index'), {
@@ -35,9 +35,14 @@ export default function Catalog({ products, filters }: { products: Product[], fi
         });
     };
 
-    // Fungsi untuk mereset filter
     const resetFilters = () => {
         router.get(route('catalog.index'));
+    };
+
+    // Fungsi untuk memformat tanggal
+    const formatDate = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('id-ID', options);
     };
 
     return (
@@ -49,7 +54,6 @@ export default function Catalog({ products, filters }: { products: Product[], fi
                     <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">Our Product Catalog</h1>
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
                         <aside className="lg:col-span-1 lg:sticky lg:top-8">
-                            {/* Kirim state dan fungsi sebagai props ke sidebar */}
                             <FilterSidebar
                                 data={data}
                                 setData={setData}
@@ -69,14 +73,24 @@ export default function Catalog({ products, filters }: { products: Product[], fi
                                                 </div>
                                                 {product.grade && <Badge className="absolute top-2 right-2 bg-yellow-500 text-white border-none">Grade {product.grade}</Badge>}
                                             </CardHeader>
-                                            <CardContent className="p-4 flex-grow">
-                                                <CardTitle className="text-lg font-semibold text-gray-800">{product.nameProduct}</CardTitle>
-                                                <p className="text-xl font-bold text-gray-900">Rp {Number(product.price).toLocaleString('id-ID')}</p>
-                                                <p className="text-sm text-gray-500 mt-1">Stock: {product.stockProduct > 0 ? product.stockProduct : 'Out of Stock'}</p>
+                                            <CardContent className="flex-grow flex flex-col">
+                                                <CardTitle className="text-lg font-semibold mb-2 text-gray-800">{product.nameProduct}</CardTitle>
+                                                {/* Menambahkan deskripsi produk dengan pemotongan teks */}
+                                                <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-grow">
+                                                    {product.detailProduct || 'No description available.'}
+                                                </p>
+                                                <p className="text-xl font-bold text-gray-900">
+                                                    Rp {Number(product.price).toLocaleString('id-ID')}
+                                                </p>
+                                                <div className="flex justify-between text-sm text-gray-500 mt-1">
+                                                    <span>Stock: {product.stockProduct > 0 ? product.stockProduct : 'Habis'}</span>
+                                                    {/* Menambahkan tanggal rilis */}
+                                                    <span className="font-bold text-gray-500">{formatDate(product.created_at)}</span>
+                                                </div>
                                             </CardContent>
-                                            <CardFooter className="p-4 pt-0">
+                                            <CardFooter>
                                                 <Link href={route('catalog.show', product.idProduct)} className="w-full">
-                                                    <Button className="w-full bg-yellow-500 text-white hover:bg-yellow-600" disabled={product.stockProduct === 0}>{product.stockProduct > 0 ? 'View Details' : 'Not Available'}</Button>
+                                                    <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white" disabled={product.stockProduct === 0}>{product.stockProduct > 0 ? 'View Details' : 'Not Available'}</Button>
                                                 </Link>
                                             </CardFooter>
                                         </Card>

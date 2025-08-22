@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class CatalogController extends Controller
 {
@@ -13,6 +14,12 @@ class CatalogController extends Controller
     {
         // Mulai query builder
         $query = Product::query();
+
+        $query->when($request->input('search'), function ($q, $search) {
+            $q->where('nameProduct', 'like', "%{$search}%")
+              ->orWhere('brandProduct', 'like', "%{$search}%")
+              ->orWhere('specs', 'like', "%{$search}%");
+        });
 
         // Terapkan filter berdasarkan input dari request
         $query->when($request->input('merk'), function ($q, $merk) {
@@ -45,14 +52,21 @@ class CatalogController extends Controller
 
         return Inertia::render('Catalog', [
             'products' => $products,
-            'filters' => $request->only(['harga', 'spesifikasi', 'merk', 'stok']), // Kirim filter kembali ke view
+            'filters' => $request->only(['price', 'specs', 'brandProduct', 'stockProduct', 'search']),
         ]);
     }
 
     public function show(Product $product): Response
     {
+        $isFavorited = false;
+        if (Auth::check()) {
+            // Cek apakah user yang login sudah memfavoritkan produk ini
+            $isFavorited = Auth::user()->favorites()->where('favorites.idProduct', $product->idProduct)->exists();
+        }
+
         return Inertia::render('ProductDetail', [
             'product' => $product,
+            'isFavorited' => $isFavorited, // Kirim status favorit ke frontend
         ]);
     }
 }

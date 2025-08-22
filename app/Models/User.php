@@ -10,18 +10,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
     protected $primaryKey = 'idUser';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'firstName',
         'lastName',
@@ -30,26 +20,33 @@ class User extends Authenticatable
         'isAdmin',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * The products that the user has favorited.
+     * Mendefinisikan semua nama kunci (key) secara eksplisit
+     * karena kita tidak menggunakan nama default Laravel ('id').
+     */
+    public function favorites()
+    {
+        return $this->belongsToMany(
+            Product::class,      // Model tujuan
+            'favorites',         // Nama tabel pivot
+            'idUser',            // Foreign key di tabel pivot untuk User
+            'idProduct',         // Foreign key di tabel pivot untuk Product
+            'idUser',            // Primary key di tabel User
+            'idProduct'          // Primary key di tabel Product
+        )->withTimestamps();
     }
 }
