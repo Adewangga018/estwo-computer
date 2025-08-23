@@ -1,4 +1,4 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import { Heart, Search, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -11,6 +11,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from './ui/button';
+import { Input } from './ui/input'; // Impor komponen Input
 
 export default function SiteHeader() {
     const { url, props } = usePage();
@@ -18,9 +19,10 @@ export default function SiteHeader() {
     const waLink = "https://wa.me/6285194574812";
 
     const [showAuthModal, setShowAuthModal] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState(''); // State untuk keyword pencarian
 
     const navItems = [
-        { href: '/', label: 'Home' }, // Diubah ke '/'
+        { href: '/', label: 'Home' },
         { href: '/catalog', label: 'Catalog' },
     ];
 
@@ -28,6 +30,16 @@ export default function SiteHeader() {
         e.preventDefault();
         setShowAuthModal(true);
     };
+
+    // Fungsi untuk handle submit pencarian
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        router.get(route('catalog.index'), { search: searchKeyword }, {
+            preserveState: true,
+            replace: true,
+        });
+    };
+
 
     return (
         <>
@@ -51,11 +63,28 @@ export default function SiteHeader() {
                             Services
                         </a>
                     </nav>
-                    
+
                     <div className="flex items-center space-x-4">
-                        <div className="relative">
-                            {/* Fitur search tetap sama */}
-                        </div>
+                        {/* --- SEARCH BOX --- */}
+                        <form onSubmit={handleSearch} className="relative hidden md:block bg-gray-100 rounded-md">
+                            <Input
+                                type="search"
+                                placeholder="Cari produk..."
+                                className="h-9 w-full rounded-md border bg-gray-800 text-black px-3 pr-10 placeholder:text-gray-400"
+                                value={searchKeyword}
+                                onChange={(e) => setSearchKeyword(e.target.value)}
+                            />
+                            <Button
+                                type="submit"
+                                size="icon"
+                                variant="ghost"
+                                className="absolute inset-y-0 right-0 h-9 w-9 text-black hover:bg-gray-200"
+                            >
+                                <Search size={20} />
+                            </Button>
+                        </form>
+                        {/* --- END OF SEARCH BOX --- */}
+
                         {user ? (
                             <Link href="/favorites" className="text-white hover:text-gray-300">
                                 <Heart size={32} />
