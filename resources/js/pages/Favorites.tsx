@@ -3,6 +3,7 @@ import SiteHeader from '@/components/SiteHeader';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import SiteFooter from '@/components/SiteFooter';
 
 // Definisikan tipe data untuk produk agar sesuai dengan data dari katalog
 interface Product {
@@ -60,7 +61,7 @@ const ProductCard = ({ product }: { product: Product }) => (
         </CardContent>
         <CardFooter className="p-4 pt-0 mt-auto">
             <Link href={route('catalog.show', product.idProduct)} className="w-full">
-                <Button className="w-full bg-gray-800 hover:bg-gray-900 text-white" disabled={product.stockProduct === 0}>
+                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white" disabled={product.stockProduct === 0}>
                     {product.stockProduct > 0 ? 'View Details' : 'Not Available'}
                 </Button>
             </Link>
@@ -90,6 +91,7 @@ export default function Favorites({ products }: { products: Product[] }) {
                         </div>
                     )}
                 </main>
+                <SiteFooter />
             </div>
         </>
     );

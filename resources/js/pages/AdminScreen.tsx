@@ -1,32 +1,31 @@
 import { Head, Link } from '@inertiajs/react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { User, ShoppingCart } from 'lucide-react';
+import { Button } from '@/components/ui';
+import { ArrowLeft } from 'lucide-react'; // Impor ikon panah
 
 export default function AdminScreen() {
     return (
         <>
             <Head title="Admin Dashboard" />
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-                <Card className="w-full max-w-2xl bg-white">
-                    <CardHeader>
-                        <CardTitle className="text-3xl font-bold text-center text-black">Admin Dashboard</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-col md:flex-row items-center justify-center gap-4 p-6">
-                        <Link href="/admin/users" className="w-full md:w-auto">
-                            <Button className="w-full text-lg text-semibold p-6 bg-yellow-500 hover:bg-yellow-600 text-white">
-                                <User className="mr-2" />
-                                CRUD Users
-                            </Button>
+            <div className="relative flex min-h-screen items-center justify-center bg-gray-100 p-4">
+                {/* Tombol Kembali */}
+                <Link href="/login" className="absolute top-4 left-4">
+                    <Button variant="outline" className="flex items-center gap-2">
+                        <ArrowLeft size={16} />
+                        Kembali ke Login
+                    </Button>
+                </Link>
+
+                <div className="w-full max-w-4xl rounded-lg bg-white p-8 shadow-lg">
+                    <h1 className="mb-8 text-center text-4xl font-bold text-gray-800">Admin Dashboard</h1>
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <Link href="/admin/users" className="block rounded-lg bg-yellow-500 p-6 text-center text-white shadow-md transition-transform hover:scale-105">
+                            <h2 className="text-2xl font-semibold">Users Monitoring</h2>
                         </Link>
-                        <Link href="/admin/products" className="w-full md:w-auto">
-                            <Button className="w-full text-lg p-6 bg-yellow-500 hover:bg-yellow-600 text-white">
-                                <ShoppingCart className="mr-2" />
-                                CRUD Products
-                            </Button>
+                        <Link href="/admin/products" className="block rounded-lg bg-yellow-500 p-6 text-center text-white shadow-md transition-transform hover:scale-105">
+                            <h2 className="text-2xl font-semibold">Products Monitoring</h2>
                         </Link>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
             </div>
         </>
     );

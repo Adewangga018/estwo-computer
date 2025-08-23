@@ -1,8 +1,9 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableRow, TableCell, TableHead, TableHeader, TableBody } from '@/components/ui';
 import React, { useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 
 // Tipe data untuk user, sesuaikan dengan model User Anda
 
@@ -172,6 +173,14 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
         <>
             <Head title="Users Monitoring"/>
             <div className="mx-auto py-8 bg-gray-100">
+                <div className="mb-4">
+                    <Link href="/admin" className="m-4 top-4 left-4">
+                        <Button variant="outline" className="flex items-center gap-2">
+                            <ArrowLeft size={16} />
+                             Kembali ke Dashboard
+                        </Button>
+                    </Link>
+                </div>
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-2xl">Users Monitoring</CardTitle>

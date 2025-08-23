@@ -40,7 +40,7 @@ export default function ProductDetail({ product, isFavorited }: { product: Produ
     // 4. Gunakan state untuk memberi feedback visual instan
     const [favorited, setFavorited] = useState(isFavorited);
 
-    const sellerWhatsAppNumber = '6285186882834';
+    const sellerWhatsAppNumber = '6285194574812';
     const whatsappMessage = `Halo, saya tertarik dengan produk "${product.nameProduct}". Apakah masih tersedia?`;
     const whatsappUrl = `https://wa.me/${sellerWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 

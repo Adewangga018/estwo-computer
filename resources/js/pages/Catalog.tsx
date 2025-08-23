@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import FilterSidebar from '@/components/FilterSidebar';
+import SiteFooter from '@/components/SiteFooter';
 
 // Definisikan tipe data Product
 interface Product {
@@ -109,6 +110,7 @@ export default function Catalog({ products, filters }: { products: Product[], fi
                         </div>
                     </div>
                 </main>
+                <SiteFooter />
             </div>
         </>
     );

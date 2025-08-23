@@ -1,6 +1,6 @@
-
 import { usePage, Head } from '@inertiajs/react';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 
 export default function Account() {
     const { user, csrf } = usePage().props as any;
@@ -41,6 +41,7 @@ export default function Account() {
                         </form>
                     </div>
                 </main>
+                <SiteFooter />
             </div>
         </>
     );

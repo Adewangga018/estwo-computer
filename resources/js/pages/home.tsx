@@ -3,6 +3,8 @@ import SiteHeader from '@/components/SiteHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import SiteFooter from '@/components/SiteFooter';
+
 
 // Definisikan tipe data untuk produk agar sesuai dengan data dari katalog
 interface Product {
@@ -122,6 +124,7 @@ export default function Home({ popularProducts, newestProducts }: { popularProdu
                         </section>
                     </div>
                 </main>
+                <SiteFooter />
             </div>
         </>
     );

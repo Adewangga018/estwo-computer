@@ -1,4 +1,4 @@
-import { Head, useForm, router } from '@inertiajs/react';
+import { Head, useForm, router, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { ArrowLeft } from 'lucide-react';
 
 // Tipe data lengkap untuk produk
 interface Product {
@@ -129,6 +130,14 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
         <>
             <Head title="Products Monitoring" />
             <div className="container mx-auto py-8">
+                <div className="mb-4">
+                    <Link href="/admin" className="m-4 top-4 left-4">
+                        <Button variant="outline" className="flex items-center gap-2">
+                            <ArrowLeft size={16} />
+                            Kembali ke Dashboard
+                        </Button>
+                    </Link>
+                </div>
                 <Card>
                     <CardHeader><CardTitle className="text-2xl">Products Monitoring</CardTitle></CardHeader>
                     <CardContent>
