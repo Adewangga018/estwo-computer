@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,10 +19,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
-        // --- PERUBAHAN DI SINI ---
-        // Hapus "Auth/" agar sesuai dengan lokasi file Login.tsx
         return Inertia::render('Login', [
-            'canResetPassword' => false,
+            'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
         ]);
     }
@@ -27,24 +28,27 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): \Illuminate\Http\RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        // Redirect ke dashboard admin jika user adalah admin
+        // --- PERUBAHAN UTAMA ADA DI SINI ---
+        // Setelah login berhasil, periksa apakah pengguna adalah admin.
         if ($request->user()->is_admin) {
+            // Jika admin, arahkan ke dashboard sipak.
             return redirect()->intended(route('sipak.dashboard'));
         }
 
-        return redirect()->intended(route('home', [], false));
+        // Jika bukan admin, arahkan ke halaman home.
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): \Illuminate\Http\RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 

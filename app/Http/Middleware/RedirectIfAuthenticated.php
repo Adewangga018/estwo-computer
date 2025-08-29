@@ -21,18 +21,16 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                // --- PERUBAHAN DIMULAI DI SINI ---
+                // --- PERUBAHAN KEDUA ADA DI SINI ---
 
-                // Cek apakah user yang sedang login adalah admin
+                // Jika pengguna yang sudah login adalah admin,
+                // arahkan ke dashboard admin.
                 if (Auth::user()->is_admin) {
-                    // Jika iya, arahkan ke dashboard admin
                     return redirect(route('sipak.dashboard'));
                 }
 
-                // Jika bukan admin, arahkan ke halaman home biasa
+                // Jika bukan admin, arahkan ke halaman home biasa.
                 return redirect(RouteServiceProvider::HOME);
-
-                // --- PERUBAHAN SELESAI ---
             }
         }
 
