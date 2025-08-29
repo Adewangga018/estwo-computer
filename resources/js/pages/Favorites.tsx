@@ -5,16 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SiteFooter from '@/components/SiteFooter';
 
-// Definisikan tipe data untuk produk agar sesuai dengan data dari katalog
+// Definisikan tipe data untuk produk yang sudah direvisi
 interface Product {
     idProduct: number;
     nameProduct: string;
     price: number;
-    stockProduct: number;
     photo: string | null;
     grade: string | null;
     detailProduct: string | null;
     created_at: string;
+    linkProduct: string | null; // Ditambahkan
 }
 
 // Fungsi untuk memformat tanggal
@@ -23,7 +23,7 @@ const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('id-ID', options);
 };
 
-// Komponen kartu produk yang sama seperti di halaman Home
+// Komponen kartu produk
 const ProductCard = ({ product }: { product: Product }) => (
     <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg h-full">
         <CardHeader className="p-0 relative">
@@ -55,14 +55,14 @@ const ProductCard = ({ product }: { product: Product }) => (
                 Rp {Number(product.price).toLocaleString('id-ID')}
             </p>
             <div className="flex justify-between text-sm text-gray-500 mt-1">
-                <span>Stock: {product.stockProduct > 0 ? product.stockProduct : 'Habis'}</span>
+                {/* Info stok dihapus */}
                 <span className="font-semibold">{formatDate(product.created_at)}</span>
             </div>
         </CardContent>
         <CardFooter className="p-4 pt-0 mt-auto">
             <Link href={route('catalog.show', product.idProduct)} className="w-full">
-                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white" disabled={product.stockProduct === 0}>
-                    {product.stockProduct > 0 ? 'View Details' : 'Not Available'}
+                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white">
+                    View Details
                 </Button>
             </Link>
         </CardFooter>

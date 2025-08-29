@@ -15,13 +15,13 @@ class ProductController extends Controller
             'nameProduct' => 'required|string|max:150',
             'typeProduct' => 'nullable|string|max:100',
             'detailProduct' => 'nullable|string',
-            'stockProduct' => 'required|integer|min:0',
             'brandProduct' => 'nullable|string|max:100',
             'price' => 'required|numeric|min:0',
             'grade' => 'nullable|string|max:50',
             'completenessProduct' => 'nullable|string|max:255',
             'specs' => 'nullable|string',
             'disability' => 'nullable|string',
+            'linkProduct' => 'nullable|string|max:255', // Validasi untuk linkProduct
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -32,7 +32,7 @@ class ProductController extends Controller
 
         Product::create($validated);
 
-        return redirect()->route('admin.products')->with('success', 'Product created successfully.');
+        return redirect()->route('sipak.products')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -44,29 +44,27 @@ class ProductController extends Controller
             'nameProduct' => 'required|string|max:150',
             'typeProduct' => 'nullable|string|max:100',
             'detailProduct' => 'nullable|string',
-            'stockProduct' => 'required|integer|min:0',
             'brandProduct' => 'nullable|string|max:100',
             'price' => 'required|numeric|min:0',
             'grade' => 'nullable|string|max:50',
             'completenessProduct' => 'nullable|string|max:255',
             'specs' => 'nullable|string',
             'disability' => 'nullable|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // 'photo' tidak 'required' saat update
+            'linkProduct' => 'nullable|string|max:255', // Validasi untuk linkProduct
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($request->hasFile('photo')) {
-            // Hapus foto lama jika ada
             if ($product->photo) {
                 Storage::disk('public')->delete($product->photo);
             }
-            // Simpan foto baru
             $path = $request->file('photo')->store('images', 'public');
             $validated['photo'] = $path;
         }
 
         $product->update($validated);
 
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
+        return redirect()->route('sipak.products')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -74,13 +72,12 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        // Hapus foto dari storage jika ada
         if ($product->photo) {
             Storage::disk('public')->delete($product->photo);
         }
 
         $product->delete();
 
-        return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
+        return redirect()->route('sipak.products')->with('success', 'Product created successfully.');
     }
 }

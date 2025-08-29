@@ -18,11 +18,14 @@ export default function AdminScreen() {
                 <div className="w-full max-w-4xl rounded-lg bg-white p-8 shadow-lg">
                     <h1 className="mb-8 text-center text-4xl font-bold text-gray-800">Admin Dashboard</h1>
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                        <Link href="/admin/users" className="block rounded-lg bg-yellow-500 p-6 text-center text-white shadow-md transition-transform hover:scale-105">
+                        <Link href="/sipak/users" className="block rounded-lg bg-yellow-500 p-6 text-center text-white shadow-md transition-transform hover:scale-105">
                             <h2 className="text-2xl font-semibold">Users Monitoring</h2>
                         </Link>
-                        <Link href="/admin/products" className="block rounded-lg bg-yellow-500 p-6 text-center text-white shadow-md transition-transform hover:scale-105">
+                        <Link href="/sipak/products" className="block rounded-lg bg-yellow-500 p-6 text-center text-white shadow-md transition-transform hover:scale-105">
                             <h2 className="text-2xl font-semibold">Products Monitoring</h2>
+                        </Link>
+                        <Link href="/sipak/reports" className="block rounded-lg bg-yellow-500 p-6 text-center text-white shadow-md transition-transform hover:scale-105">
+                            <h2 className="text-2xl font-semibold">Reports</h2>
                         </Link>
                     </div>
                 </div>

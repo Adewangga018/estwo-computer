@@ -17,7 +17,10 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/'; // <-- PERBAIKAN DI SINI
+    // --- PERUBAHAN DI SINI ---
+    // Ubah '/admin' menjadi '/' karena halaman utama user adalah home.
+    // Redirect untuk admin akan ditangani oleh middleware.
+    public const HOME = '/';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.

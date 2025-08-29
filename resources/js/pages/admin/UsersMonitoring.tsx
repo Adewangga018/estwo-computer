@@ -62,7 +62,7 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
         try {
             // Ambil CSRF token dari meta tag
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const res = await fetch('/admin/users', {
+            const res = await fetch('/sipak/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
         setErrorEdit(null);
         try {
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const res = await fetch(`/admin/users/${selectedUser.idUser}`, {
+            const res = await fetch(`/sipak/users/${selectedUser.idUser}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
         setErrorDelete(null);
         try {
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const res = await fetch(`/admin/users/${selectedUser.idUser}`, {
+            const res = await fetch(`/sipak/users/${selectedUser.idUser}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
@@ -174,7 +174,7 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
             <Head title="Users Monitoring"/>
             <div className="mx-auto py-8 bg-gray-100">
                 <div className="mb-4">
-                    <Link href="/admin" className="m-4 top-4 left-4">
+                    <Link href="/sipak" className="m-4 top-4 left-4">
                         <Button variant="outline" className="flex items-center gap-2">
                             <ArrowLeft size={16} />
                              Kembali ke Dashboard

@@ -94,40 +94,6 @@ export default function Login() {
                                 <a href="/register" className="ml-2 font-semibold text-yellow-500 hover:text-yellow-600">Daftar di sini</a>
                             </div>
                         </CardContent>
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <div className="p-6 pt-0">
-                                    <Button variant="outline" className="w-full bg-black text-white">Masuk sebagai admin</Button>
-                                </div>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[425px]">
-                                <DialogHeader>
-                                    <DialogTitle>Login Admin</DialogTitle>
-                                </DialogHeader>
-                                <form onSubmit={handleAdminLogin}>
-                                    <div className="grid gap-4 py-4">
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="admin-password" className="text-right">
-                                                Password
-                                            </Label>
-                                            <Input
-                                                id="admin-password"
-                                                type="password"
-                                                value={adminData.password}
-                                                onChange={(e) => setAdminData('password', e.target.value)}
-                                                className="col-span-3"
-                                            />
-                                        </div>
-                                        {adminErrors.password && <div className="col-start-2 col-span-3 text-red-500 text-sm">{adminErrors.password}</div>}
-                                    </div>
-                                    <DialogFooter>
-                                        <Button type="submit" disabled={adminProcessing}>
-                                            {adminProcessing ? 'Memproses...' : 'Login'}
-                                        </Button>
-                                    </DialogFooter>
-                                </form>
-                            </DialogContent>
-                        </Dialog>
                     </Card>
                 </main>
             </div>

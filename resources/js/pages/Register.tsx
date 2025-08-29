@@ -1,54 +1,118 @@
-import { Head, useForm } from '@inertiajs/react';
-import SiteHeader from '@/components/SiteHeader';
+import { Head, useForm, Link } from '@inertiajs/react';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@/components/ui';
+import { FormEventHandler } from 'react';
 
 export default function Register() {
+    // --- PERUBAHAN DI SINI ---
     const { data, setData, post, processing, errors } = useForm({
         firstName: '',
         lastName: '',
         email: '',
         password: '',
+        password_confirmation: '',
     });
 
-    function handleSubmit(e: React.FormEvent) {
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/register');
-    }
+        post(route('register'));
+    };
 
     return (
         <>
             <Head title="Register" />
-            <div className="min-h-screen bg-gray-100 text-gray-800 flex flex-col">
-                <main className="flex-1 flex items-center justify-center">
-                    <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
-                        <div className="flex justify-center mb-6">
-                            <img src="/images/estwo-logo.png" alt="Estwo Logo" className="h-16" />
-                        </div>
-                        <h2 className="mb-6 text-3xl font-bold text-center">Register</h2>
-                        <form onSubmit={handleSubmit}>
-                            <div className="mb-4">
-                                <label htmlFor="firstName" className="block mb-2 font-semibold">First Name</label>
-                                <input type="text" id="firstName" name="firstName" value={data.firstName} onChange={e => setData('firstName', e.target.value)} className="w-full rounded-lg border border-gray-300 p-3 focus:border-yellow-500 focus:outline-none" placeholder="First Name" />
-                                {errors.firstName && <div className="text-red-500 text-sm mt-1">{errors.firstName}</div>}
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="lastName" className="block mb-2 font-semibold">Last Name</label>
-                                <input type="text" id="lastName" name="lastName" value={data.lastName} onChange={e => setData('lastName', e.target.value)} className="w-full rounded-lg border border-gray-300 p-3 focus:border-yellow-500 focus:outline-none" placeholder="Last Name" />
-                                {errors.lastName && <div className="text-red-500 text-sm mt-1">{errors.lastName}</div>}
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="email" className="block mb-2 font-semibold">Email</label>
-                                <input type="email" id="email" name="email" value={data.email} onChange={e => setData('email', e.target.value)} className="w-full rounded-lg border border-gray-300 p-3 focus:border-yellow-500 focus:outline-none" placeholder="Email" />
-                                {errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
-                            </div>
-                            <div className="mb-6">
-                                <label htmlFor="password" className="block mb-2 font-semibold">Password</label>
-                                <input type="password" id="password" name="password" value={data.password} onChange={e => setData('password', e.target.value)} className="w-full rounded-lg border border-gray-300 p-3 focus:border-yellow-500 focus:outline-none" placeholder="Password" />
-                                {errors.password && <div className="text-red-500 text-sm mt-1">{errors.password}</div>}
-                            </div>
-                            <button type="submit" disabled={processing} className="w-full rounded-lg bg-yellow-500 px-6 py-3 font-semibold text-white hover:bg-yellow-600">{processing ? 'Mendaftar...' : 'Register'}</button>
-                        </form>
+            <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+                <div className="w-full max-w-md">
+                    {/* Logo Anda tetap di sini */}
+                    <div className="mb-6 text-center">
+
                     </div>
-                </main>
+                    <Card>
+                        <CardHeader className="text-center">
+                            <Link href="/">
+                                <img src="/images/estwo-logo.png" alt="Estwo Computer Logo" className="mx-auto h-20 w-auto" />
+                            </Link>
+                            <CardTitle className="text-2xl">Create an Account</CardTitle>
+                            <CardDescription>Enter your details below to register.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={submit}>
+
+                                <div className="grid gap-4">
+                                    {/* --- INPUT NAMA DIPERBARUI DI SINI --- */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="firstName">First Name</Label>
+                                            <Input
+                                                id="firstName"
+                                                placeholder="John"
+                                                value={data.firstName}
+                                                onChange={(e) => setData('firstName', e.target.value)}
+                                                required
+                                                autoFocus
+                                            />
+                                            {errors.firstName && <p className="text-xs text-red-500">{errors.firstName}</p>}
+                                        </div>
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="lastName">Last Name</Label>
+                                            <Input
+                                                id="lastName"
+                                                placeholder="Doe"
+                                                value={data.lastName}
+                                                onChange={(e) => setData('lastName', e.target.value)}
+                                                required
+                                            />
+                                            {errors.lastName && <p className="text-xs text-red-500">{errors.lastName}</p>}
+                                        </div>
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="email">Email</Label>
+                                        <Input
+                                            id="email"
+                                            type="email"
+                                            placeholder="m@example.com"
+                                            value={data.email}
+                                            onChange={(e) => setData('email', e.target.value)}
+                                            required
+                                        />
+                                        {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="password">Password</Label>
+                                        <Input
+                                            id="password"
+                                            type="password"
+                                            value={data.password}
+                                            onChange={(e) => setData('password', e.target.value)}
+                                            required
+                                        />
+                                        {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="password_confirmation">Confirm Password</Label>
+                                        <Input
+                                            id="password_confirmation"
+                                            type="password"
+                                            value={data.password_confirmation}
+                                            onChange={(e) => setData('password_confirmation', e.target.value)}
+                                            required
+                                        />
+                                        {errors.password_confirmation && <p className="text-xs text-red-500">{errors.password_confirmation}</p>}
+                                    </div>
+                                    <Button type="submit" className="w-full bg-yellow-500 text-white hover:bg-yellow-600" disabled={processing}>
+                                        Create an account
+                                    </Button>
+                                </div>
+                            </form>
+                            <div className="mt-4 text-center text-sm">
+                                Already have an account?{' '}
+                                <Link href={route('login')} className="underline text-yellow-500 hover:text-yellow-600">
+                                    Sign in
+                                </Link>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </>
     );

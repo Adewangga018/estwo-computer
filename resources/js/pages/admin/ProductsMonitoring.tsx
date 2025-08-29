@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, X } from 'lucide-react';
 
 // Tipe data lengkap untuk produk
 interface Product {
@@ -14,13 +14,13 @@ interface Product {
     nameProduct: string;
     typeProduct: string | null;
     detailProduct: string | null;
-    stockProduct: number;
     brandProduct: string | null;
     price: number;
     grade: string | null;
     completenessProduct: string | null;
     specs: string | null;
     disability: string | null;
+    linkProduct: string | null;
     photo: string | null;
     created_at: string;
     updated_at: string;
@@ -38,17 +38,18 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
     const [showCreate, setShowCreate] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
-    const [showDetail, setShowDetail] = useState(false); // State baru untuk modal detail
+    const [showDetail, setShowDetail] = useState(false);
+    const [showVideoModal, setShowVideoModal] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     // Form hook untuk membuat produk baru
     const { data: createData, setData: setCreateData, post: storeProduct, processing: createProcessing, errors: createErrors, reset: resetCreateForm } = useForm({
-        nameProduct: '', typeProduct: 'Laptop', detailProduct: '', stockProduct: 0, brandProduct: '', price: 0, grade: 'A', completenessProduct: 'Satu set', specs: '', disability: '', photo: null as File | null,
+        nameProduct: '', typeProduct: 'Laptop', detailProduct: '', brandProduct: '', price: 0, grade: 'A', completenessProduct: 'Satu set', specs: '', disability: '', linkProduct: '', photo: null as File | null,
     });
 
     // Form hook untuk mengedit produk
     const { data: editData, setData: setEditData, post: updateProduct, processing: editProcessing, errors: editErrors } = useForm({
-        nameProduct: '', typeProduct: '', detailProduct: '', stockProduct: 0, brandProduct: '', price: 0, grade: '', completenessProduct: '', specs: '', disability: '', photo: null as File | null, _method: 'POST'
+        nameProduct: '', typeProduct: '', detailProduct: '', brandProduct: '', price: 0, grade: '', completenessProduct: '', specs: '', disability: '', linkProduct: '', photo: null as File | null, _method: 'POST'
     });
 
     // Handlers untuk membuka modal
@@ -61,13 +62,13 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
             nameProduct: product.nameProduct,
             typeProduct: product.typeProduct || '',
             detailProduct: product.detailProduct || '',
-            stockProduct: product.stockProduct,
             brandProduct: product.brandProduct || '',
             price: product.price,
             grade: product.grade || 'A',
             completenessProduct: product.completenessProduct || 'Satu set',
             specs: product.specs || '',
             disability: product.disability || '',
+            linkProduct: product.linkProduct || '', // Tambahkan ini
             photo: null,
             _method: 'POST'
         });
@@ -85,18 +86,18 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
     // Handlers untuk submit form
     const handleCreateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        storeProduct(route('admin.products.store'), { onSuccess: () => closeModal() });
+        storeProduct(route('sipak.products.store'), { onSuccess: () => closeModal() });
     };
 
     const handleEditSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedProduct) return;
-        updateProduct(route('admin.products.update', selectedProduct.idProduct), { onSuccess: () => closeModal() });
+        updateProduct(route('sipak.products.update', selectedProduct.idProduct), { onSuccess: () => closeModal() });
     };
 
     const handleDeleteConfirm = () => {
         if (!selectedProduct) return;
-        router.delete(route('admin.products.destroy', selectedProduct.idProduct), { onSuccess: () => closeModal() });
+        router.delete(route('sipak.products.destroy', selectedProduct.idProduct), { onSuccess: () => closeModal() });
     };
 
     const renderFormFields = (data: any, setData: Function, errors: any) => (
@@ -107,7 +108,6 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                 <div><Label htmlFor="typeProduct">Type</Label><Input id="typeProduct" value={data.typeProduct} onChange={e => setData('typeProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.typeProduct}</p></div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div><Label htmlFor="stockProduct">Stock</Label><Input id="stockProduct" type="number" value={data.stockProduct} onChange={e => setData('stockProduct', Number(e.target.value))} /><p className="text-red-500 text-sm mt-1">{errors.stockProduct}</p></div>
                 <div><Label htmlFor="price">Price</Label><Input id="price" type="number" value={data.price} onChange={e => setData('price', Number(e.target.value))} /><p className="text-red-500 text-sm mt-1">{errors.price}</p></div>
                 <div><Label htmlFor="grade">Grade</Label><select id="grade" className="w-full border p-2 rounded-md h-10" value={data.grade} onChange={e => setData('grade', e.target.value)}><option>A</option><option>B</option><option>C</option></select><p className="text-red-500 text-sm mt-1">{errors.grade}</p></div>
             </div>
@@ -115,6 +115,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
             <div><Label htmlFor="detailProduct">Description</Label><Textarea id="detailProduct" value={data.detailProduct} onChange={e => setData('detailProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.detailProduct}</p></div>
             <div><Label htmlFor="specs">Specifications</Label><Textarea id="specs" value={data.specs} onChange={e => setData('specs', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.specs}</p></div>
             <div><Label htmlFor="disability">Disability</Label><Textarea id="disability" value={data.disability} onChange={e => setData('disability', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.disability}</p></div>
+            <div><Label htmlFor="linkProduct">Product Link</Label><Input id="linkProduct" value={data.linkProduct} onChange={e => setData('linkProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.linkProduct}</p></div>
             <div><Label htmlFor="photo">Product Photo</Label><Input id="photo" type="file" onChange={e => setData('photo', e.target.files ? e.target.files[0] : null)} /><p className="text-red-500 text-sm mt-1">{errors.photo}</p></div>
         </div>
     );
@@ -126,12 +127,31 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
         </div>
     );
 
+    // Fungsi untuk mendapatkan URL embed dari berbagai platform
+    const getEmbedUrl = (url: string | null): string | null => {
+        if (!url) return null;
+        // YouTube
+        const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const youtubeMatch = url.match(youtubeRegExp);
+        if (youtubeMatch && youtubeMatch[2].length === 11) {
+            return `https://www.youtube.com/embed/${youtubeMatch[2]}`;
+        }
+        // Instagram
+        if (url.includes('instagram.com/reel/') || url.includes('instagram.com/p/')) {
+            return url + '/embed';
+        }
+        // TikTok & platform lain
+        return url;
+    };
+
+    const videoEmbedUrl = getEmbedUrl(selectedProduct?.linkProduct || null);
+
     return (
         <>
             <Head title="Products Monitoring" />
             <div className="container mx-auto py-8">
                 <div className="mb-4">
-                    <Link href="/admin" className="m-4 top-4 left-4">
+                    <Link href="/sipak" className="m-4 top-4 left-4">
                         <Button variant="outline" className="flex items-center gap-2">
                             <ArrowLeft size={16} />
                             Kembali ke Dashboard
@@ -144,15 +164,14 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                         <div className="mb-4"><Button className="text-white bg-yellow-500 hover:bg-yellow-600" onClick={handleCreate}>Create New Product</Button></div>
                         <div className="overflow-x-auto justify-center text-center rounded-lg border">
                             <Table>
-                                <TableHeader><TableRow><TableHead>ID</TableHead><TableHead>Photo</TableHead><TableHead>Product Name</TableHead><TableHead>Type</TableHead><TableHead>Stock</TableHead><TableHead>Price</TableHead><TableHead className="text-center justify-center">Actions</TableHead></TableRow></TableHeader>
+                                <TableHeader><TableRow><TableHead>ID</TableHead><TableHead>Photo</TableHead><TableHead>Product Name</TableHead><TableHead>Type</TableHead><TableHead>Price</TableHead><TableHead className="text-center justify-center">Actions</TableHead></TableRow></TableHeader>
                                 <TableBody>
                                     {productList.length > 0 ? productList.map((product) => (
                                         <TableRow key={product.idProduct}>
                                             <TableCell>{product.idProduct}</TableCell>
-                                            <TableCell>{product.photo ? <img src={`/storage/${product.photo}`} alt={product.nameProduct} className="h-16 w-16 object-cover rounded-md" /> : <div className="h-16 w-16 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">No Photo</div>}</TableCell>
+                                            <TableCell>{product.photo ? <img src={`/storage/${product.photo}`} alt={product.nameProduct} className="h-16 w-16 items-center" /> : <div className="h-16 w-16 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">No Photo</div>}</TableCell>
                                             <TableCell className="font-medium">{product.nameProduct}</TableCell>
                                             <TableCell>{product.typeProduct}</TableCell>
-                                            <TableCell>{product.stockProduct}</TableCell>
                                             <TableCell>Rp {Number(product.price).toLocaleString('id-ID')}</TableCell>
                                             <TableCell className="text-center">
                                                 <div className="flex gap-2 justify-center">
@@ -195,13 +214,23 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                                 <DetailRow label="Brand" value={selectedProduct.brandProduct} />
                                                 <DetailRow label="Type" value={selectedProduct.typeProduct} />
                                                 <DetailRow label="Price" value={`Rp ${Number(selectedProduct.price).toLocaleString('id-ID')}`} />
-                                                <DetailRow label="Stock" value={selectedProduct.stockProduct} />
                                                 <DetailRow label="Grade" value={selectedProduct.grade} />
                                                 <DetailRow label="Completeness" value={selectedProduct.completenessProduct} />
                                             </dl>
+                                            {videoEmbedUrl && (
+                                                <div className="mt-4">
+                                                    <Button
+                                                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
+                                                        onClick={() => setShowVideoModal(true)}
+                                                    >
+                                                        Video Produk
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="mt-4 space-y-2 text-sm">
+                                        <div><h3 className="font-semibold text-gray-600">Product Link</h3><p className="text-gray-800 bg-gray-50 p-2 rounded break-all">{selectedProduct.linkProduct || '-'}</p></div>
                                         <div><h3 className="font-semibold text-gray-600">Description</h3><p className="text-gray-800 bg-gray-50 p-2 rounded">{selectedProduct.detailProduct || '-'}</p></div>
                                         <div><h3 className="font-semibold text-gray-600">Specifications</h3><p className="text-gray-800 bg-gray-50 p-2 rounded">{selectedProduct.specs || '-'}</p></div>
                                         <div><h3 className="font-semibold text-gray-600">Disability</h3><p className="text-gray-800 bg-gray-50 p-2 rounded">{selectedProduct.disability || '-'}</p></div>
@@ -209,6 +238,30 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                     <div className="flex justify-end mt-6">
                                         <Button variant="outline" onClick={closeModal}>Close</Button>
                                     </div>
+                                </div>
+                            </div>
+                        )}
+                        {/* --- MODAL VIDEO DITAMBAHKAN DI SINI --- */}
+                        {showVideoModal && videoEmbedUrl && (
+                            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+                                <div className="bg-black rounded-lg p-2 w-full max-w-3xl aspect-video relative">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => setShowVideoModal(false)}
+                                        className="absolute -top-2 -right-2 z-10 text-white bg-gray-800 hover:bg-gray-700 hover:text-white rounded-full"
+                                        aria-label="Close video"
+                                    >
+                                        <X className="h-6 w-6" />
+                                    </Button>
+                                    <iframe
+                                        src={videoEmbedUrl}
+                                        title={`${selectedProduct?.nameProduct} Video`}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowFullScreen
+                                        className="w-full h-full rounded-lg"
+                                    ></iframe>
                                 </div>
                             </div>
                         )}

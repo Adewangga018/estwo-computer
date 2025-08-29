@@ -14,17 +14,14 @@ class CatalogController extends Controller
     {
         $query = Product::query();
 
-        // 1. Terapkan filter pencarian umum (dari header)
         $query->when($request->input('search'), function ($q, $search) {
             $q->where('nameProduct', 'like', "%{$search}%")
               ->orWhere('brandProduct', 'like', "%{$search}%")
               ->orWhere('specs', 'like', "%{$search}%");
         });
 
-        // 2. Terapkan filter spesifik dari sidebar
         $query->when($request->input('brandProduct'), fn ($q, $v) => $q->where('brandProduct', 'like', "%{$v}%"));
         $query->when($request->input('specs'), fn ($q, $v) => $q->where('specs', 'like', "%{$v}%"));
-        $query->when($request->input('stockProduct'), fn ($q, $v) => strtolower($v) === 'tersedia' ? $q->where('stockProduct', '>', 0) : $q);
         $query->when($request->input('price'), function ($q, $price) {
             $range = explode('-', str_replace(' ', '', $price));
             if (isset($range[0]) && is_numeric($range[0])) $q->where('price', '>=', $range[0]);
@@ -36,8 +33,7 @@ class CatalogController extends Controller
 
         return Inertia::render('Catalog', [
             'products' => $products,
-            // 3. Kirim semua filter kembali ke view agar input tetap terisi
-            'filters' => $request->only(['search', 'price', 'specs', 'brandProduct', 'stockProduct']),
+            'filters' => $request->only(['search', 'price', 'specs', 'brandProduct']),
         ]);
     }
 

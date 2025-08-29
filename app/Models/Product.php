@@ -15,13 +15,13 @@ class Product extends Model
         'nameProduct',
         'typeProduct',
         'detailProduct',
-        'stockProduct',
         'brandProduct',
         'price',
         'grade',
         'completenessProduct',
         'specs',
         'disability',
+        'linkProduct',
         'photo',
     ];
 }

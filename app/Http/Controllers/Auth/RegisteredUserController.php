@@ -16,11 +16,11 @@ use Inertia\Response;
 class RegisteredUserController extends Controller
 {
     /**
-     * Show the registration page.
+     * Display the registration view.
      */
     public function create(): Response
     {
-        return Inertia::render('auth/register');
+        return Inertia::render('Register');
     }
 
     /**
@@ -30,14 +30,17 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // --- PERUBAHAN DI SINI ---
         $request->validate([
-            'name' => 'required|string|max:255',
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'firstName' => $request->firstName,
+            'lastName' => $request->lastName,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -46,6 +49,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect(route('home', [], false));
     }
 }
