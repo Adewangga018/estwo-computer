@@ -81,7 +81,6 @@ export default function Catalog({ products, filters }: { products: Product[], fi
         <>
             <Head title="Catalog" />
             <div className="min-h-screen bg-gray-100">
-                <SiteHeader />
                 <main className="container mx-auto py-8 px-4">
                     <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">Our Product Catalog</h1>
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
@@ -110,7 +109,6 @@ export default function Catalog({ products, filters }: { products: Product[], fi
                         </div>
                     </div>
                 </main>
-                <SiteFooter />
             </div>
         </>
     );

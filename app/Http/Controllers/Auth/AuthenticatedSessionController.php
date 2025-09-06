@@ -37,8 +37,8 @@ class AuthenticatedSessionController extends Controller
         // --- PERUBAHAN UTAMA ADA DI SINI ---
         // Setelah login berhasil, periksa apakah pengguna adalah admin.
         if ($request->user()->is_admin) {
-            // Jika admin, arahkan ke dashboard sipak.
-            return redirect()->intended(route('sipak.dashboard'));
+            // Jika admin, arahkan ke dashboard admin.
+            return redirect()->intended(route('admin.dashboard'));
         }
 
         // Jika bukan admin, arahkan ke halaman home.

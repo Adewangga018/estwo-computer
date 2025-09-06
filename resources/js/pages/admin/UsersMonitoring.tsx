@@ -1,10 +1,12 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableRow, TableCell, TableHead, TableHeader, TableBody } from '@/components/ui';
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import GuestLayout from '@/Layouts/GuestLayout';
 
+UsersMonitoring.layout = (page: React.ReactNode) => <GuestLayout children={page} />;
 // Tipe data untuk user, sesuaikan dengan model User Anda
 
 interface User {
@@ -54,36 +56,15 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
     const [loadingDelete, setLoadingDelete] = useState(false);
     const [errorDelete, setErrorDelete] = useState<string|null>(null);
 
-    // Handler submit create user
-    const handleCreateSubmit = async (e: React.FormEvent) => {
+    // Handler untuk Create User
+    const handleCreateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setLoadingCreate(true);
-        setErrorCreate(null);
-        try {
-            // Ambil CSRF token dari meta tag
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const res = await fetch('/sipak/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken || '',
-                },
-                body: JSON.stringify(createForm)
-            });
-            if (!res.ok) {
-                const err = await res.json();
-                setErrorCreate(err.message || 'Gagal membuat user');
-            } else {
-                // Sukses, tutup modal dan refresh halaman
-                setShowCreate(false);
+        router.post('/admin/users', createForm, {
+            onSuccess: () => {
+                closeModal();
                 setCreateForm({ firstName: '', lastName: '', email: '', password: '' });
-                window.location.reload();
-            }
-        } catch (err) {
-            setErrorCreate('Gagal membuat user');
-        }
-        setLoadingCreate(false);
+            },
+        });
     };
 
     // Handlers
@@ -109,72 +90,32 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
         setShowEdit(false);
         setShowDelete(false);
         setSelectedUser(null);
-        setErrorEdit(null);
-        setErrorDelete(null);
     };
 
-    // Handler submit edit user
-    const handleEditSubmit = async (e: React.FormEvent) => {
+    // Handler untuk Edit User
+    const handleEditSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedUser) return;
-        setLoadingEdit(true);
-        setErrorEdit(null);
-        try {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const res = await fetch(`/sipak/users/${selectedUser.idUser}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken || '',
-                },
-                body: JSON.stringify(editForm)
-            });
-            if (!res.ok) {
-                const err = await res.json();
-                setErrorEdit(err.message || 'Gagal mengedit user');
-            } else {
-                setShowEdit(false);
-                window.location.reload();
-            }
-        } catch (err) {
-            setErrorEdit('Gagal mengedit user');
-        }
-        setLoadingEdit(false);
+        router.put(`/admin/users/${selectedUser.idUser}`, editForm, {
+            onSuccess: () => closeModal(),
+        });
     };
-    // Handler submit delete user
-    const handleDeleteSubmit = async () => {
+
+    // Handler untuk Delete User
+    const handleDeleteSubmit = () => {
         if (!selectedUser) return;
-        setLoadingDelete(true);
-        setErrorDelete(null);
-        try {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const res = await fetch(`/sipak/users/${selectedUser.idUser}`, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken || '',
-                }
-            });
-            if (!res.ok) {
-                const err = await res.json();
-                setErrorDelete(err.message || 'Gagal menghapus user');
-            } else {
-                setShowDelete(false);
-                window.location.reload();
-            }
-        } catch (err) {
-            setErrorDelete('Gagal menghapus user');
-        }
-        setLoadingDelete(false);
+        router.delete(`/admin/users/${selectedUser.idUser}`, {
+            onSuccess: () => closeModal(),
+        });
     };
 
     return (
         <>
             <Head title="Users Monitoring"/>
             <div className="mx-auto py-8 bg-gray-100">
+                {/* ... (Link kembali ke dashboard) ... */}
                 <div className="mb-4">
-                    <Link href="/sipak" className="m-4 top-4 left-4">
+                    <Link href="/admin" className="m-4 top-4 left-4">
                         <Button variant="outline" className="flex items-center gap-2">
                             <ArrowLeft size={16} />
                              Kembali ke Dashboard
@@ -189,26 +130,40 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
                         <div className="mb-4">
                             <Button className="text-white bg-yellow-500 hover:bg-yellow-600" onClick={handleCreate}>Create New User</Button>
                         </div>
-                        <Table className="text-center align-middle"
-                            headers={["ID", "First Name", "Last Name", "Email", "Actions"]}
-                        >
-                            {userList.map((user) => (
-                                <TableRow key={user.idUser}>
-                                    <TableCell>{user.idUser}</TableCell>
-                                    <TableCell>{user.firstName}</TableCell>
-                                    <TableCell>{user.lastName}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell className="p-0 align-middle text-center">
-                                        <div className="flex gap-4 justify-center items-center">
-                                            <Button className="text-white bg-yellow-500 hover:bg-yellow-600" variant="outline" size="sm" onClick={() => handleEdit(user)}>Edit</Button>
-                                            <Button className="bg-red-500 hover:bg-red-600" variant="destructive" size="sm" onClick={() => handleDelete(user)}>Delete</Button>
-                                        </div>
-                                    </TableCell>
+                        {/* 👇 PERUBAHAN DI SINI 👇 */}
+                        <Table className="text-center align-middle">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="text-center">ID</TableHead>
+                                    <TableHead className="text-center">First Name</TableHead>
+                                    <TableHead className="text-center">Last Name</TableHead>
+                                    <TableHead className="text-center">Email</TableHead>
+                                    <TableHead className="text-center">Actions</TableHead>
                                 </TableRow>
-                            ))}
+                            </TableHeader>
+                            <TableBody>
+                                {userList.map((user) => (
+                                    <TableRow key={user.idUser}>
+                                        <TableCell>{user.idUser}</TableCell>
+                                        <TableCell>{user.firstName}</TableCell>
+                                        <TableCell>{user.lastName}</TableCell>
+                                        <TableCell>{user.email}</TableCell>
+                                        <TableCell>
+                                            <div className="flex gap-4 justify-center items-center">
+                                                <Button className="text-white bg-yellow-500 hover:bg-yellow-600" variant="outline" size="sm" onClick={() => handleEdit(user)}>Edit</Button>
+                                                <Button className="bg-red-500 hover:bg-red-600" variant="destructive" size="sm" onClick={() => handleDelete(user)}>Delete</Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
                         </Table>
-                        {/* Modal Create */}
-                        {showCreate && (
+                         {/* 👆 AKHIR PERUBAHAN 👆 */}
+                    </CardContent>
+                </Card>
+            </div>
+             {/* ... (semua modal Anda tetap sama) ... */}
+             {showCreate && (
                             <div className="fixed inset-0 bg-gray-100 bg-opacity-40 flex items-center justify-center z-50">
                                 <div className="bg-white rounded-lg p-6 w-full max-w-md">
                                     <h2 className="text-xl font-bold mb-4">Create User</h2>
@@ -226,7 +181,6 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
                                 </div>
                             </div>
                         )}
-                        {/* Modal Edit */}
                         {showEdit && selectedUser && (
                             <div className="fixed inset-0 bg-gray-100 bg-opacity-40 flex items-center justify-center z-50">
                                 <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -245,7 +199,6 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
                                 </div>
                             </div>
                         )}
-                        {/* Modal Delete */}
                         {showDelete && selectedUser && (
                             <div className="fixed inset-0 bg-gray-100 bg-opacity-40 flex items-center justify-center z-50">
                                 <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -259,10 +212,6 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
                                 </div>
                             </div>
                         )}
-                        {/* Tambahkan komponen pagination di sini jika diperlukan */}
-                    </CardContent>
-                </Card>
-            </div>
         </>
     );
 }

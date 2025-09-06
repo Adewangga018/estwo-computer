@@ -8,7 +8,6 @@ export default function Account() {
         <>
             <Head title="Akun Saya" />
             <div className="min-h-screen bg-gray-100 text-gray-800 flex flex-col">
-                <SiteHeader />
                 <main className="flex-1 flex items-center justify-center">
                     <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
                         <div className="flex justify-center mb-6">
@@ -41,7 +40,6 @@ export default function Account() {
                         </form>
                     </div>
                 </main>
-                <SiteFooter />
             </div>
         </>
     );

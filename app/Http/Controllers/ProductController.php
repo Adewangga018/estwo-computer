@@ -32,7 +32,7 @@ class ProductController extends Controller
 
         Product::create($validated);
 
-        return redirect()->route('sipak.products')->with('success', 'Product created successfully.');
+        return redirect()->route('admin.products')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -64,7 +64,7 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        return redirect()->route('sipak.products')->with('success', 'Product created successfully.');
+        return redirect()->route('admin.products')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -78,6 +78,6 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('sipak.products')->with('success', 'Product created successfully.');
+        return redirect()->route('admin.products')->with('success', 'Product created successfully.');
     }
 }

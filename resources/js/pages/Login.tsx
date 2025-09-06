@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import GuestLayout from '@/Layouts/GuestLayout';
 import {
     Dialog,
     DialogContent,
@@ -12,6 +13,8 @@ import {
     DialogFooter,
 } from '@/components/ui/dialog';
 import { useEffect } from 'react';
+
+Login.layout = (page: React.ReactNode) => <GuestLayout children={page} />;
 
 export default function Login() {
     const { data, setData, post, processing, errors } = useForm({
@@ -41,6 +44,7 @@ export default function Login() {
         };
     }, []);
 
+Login.layout = (page: React.ReactNode) => <GuestLayout children={page} />;
 
     return (
         <>

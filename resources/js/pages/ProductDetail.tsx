@@ -93,7 +93,6 @@ export default function ProductDetail({ product, isFavorited }: { product: Produ
         <>
             <Head title={product.nameProduct} />
             <div className="min-h-screen bg-gray-50">
-                <SiteHeader />
                 <main className="container mx-auto py-12 px-4 bg-gray-100 min-h-screen flex items-center justify-center">
                     <div className="bg-white shadow-xl rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-start">

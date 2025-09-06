@@ -26,7 +26,7 @@ class RedirectIfAuthenticated
                 // Jika pengguna yang sudah login adalah admin,
                 // arahkan ke dashboard admin.
                 if (Auth::user()->is_admin) {
-                    return redirect(route('sipak.dashboard'));
+                    return redirect(route('admin.dashboard'));
                 }
 
                 // Jika bukan admin, arahkan ke halaman home biasa.

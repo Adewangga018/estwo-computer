@@ -8,12 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
     /**
      * Display the admin dashboard.
-     * Halaman ini akan menjadi entry point untuk /sipak.
+     * Halaman ini akan menjadi entry point untuk /admin.
      */
     public function dashboard(): Response
     {
@@ -26,7 +27,7 @@ class AdminController extends Controller
 
     /**
      * Display the product management page.
-     * Halaman ini akan diakses melalui /sipak/products.
+     * Halaman ini akan diakses melalui /admin/products.
      */
     public function products(): Response
     {
@@ -38,7 +39,7 @@ class AdminController extends Controller
 
     /**
      * Display the user management page.
-     * Halaman ini akan diakses melalui /sipak/users.
+     * Halaman ini akan diakses melalui /admin/users.
      */
     public function users(): Response
     {
@@ -49,30 +50,31 @@ class AdminController extends Controller
     }
 
     /**
-     * Menyimpan user baru dari form di halaman admin.
+     * Store a newly created user in storage.
      */
     public function storeUser(Request $request)
     {
-        $validated = $request->validate([
-            'firstName' => 'required|string|max:100',
-            'lastName' => 'nullable|string|max:100',
-            'email' => 'required|email|max:150|unique:users,email',
-            'password' => 'required|string|min:6',
+        $request->validate([
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'nullable|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         User::create([
-            'firstName' => $validated['firstName'],
-            'lastName' => $validated['lastName'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'firstName' => $request->firstName,
+            'lastName' => $request->lastName,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('sipak.users')->with('success', 'User created successfully.');
+        return redirect()->route('admin.users')->with('message', 'User created successfully.');
     }
 
     /**
      * Update data user dari form di halaman admin.
      */
+
     public function updateUser(Request $request, User $user)
     {
         $validated = $request->validate([
@@ -82,15 +84,18 @@ class AdminController extends Controller
             'password' => 'nullable|string|min:6',
         ]);
 
-        $user->fill($validated);
-
-        if (!empty($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
+        // Jika password tidak diisi (kosong), hapus dari array agar tidak di-update.
+        if (empty($validated['password'])) {
+            unset($validated['password']);
+        } else {
+            // Jika ada password baru, hash password tersebut.
+            $validated['password'] = Hash::make($validated['password']);
         }
 
-        $user->save();
+        // Update user dengan data yang sudah divalidasi
+        $user->update($validated);
 
-        return redirect()->route('sipak.users')->with('success', 'User updated successfully.');
+        return redirect()->route('admin.users')->with('success', 'User updated successfully.');
     }
 
     /**
@@ -99,6 +104,6 @@ class AdminController extends Controller
     public function deleteUser(User $user)
     {
         $user->delete();
-        return redirect()->route('sipak.users')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
     }
 }

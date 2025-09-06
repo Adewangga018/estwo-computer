@@ -21,16 +21,21 @@ Route::middleware('auth')->group(function () {
 });
 
 // Rute Admin
-Route::prefix('sipak')->middleware(['auth', 'admin'])->name('sipak.')->group(function () {
-    // Pastikan rute utama /sipak memanggil metode dashboard
-    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/products', [AdminController::class, 'products'])->name('products');
-    Route::get('/users', [AdminController::class, 'users'])->name('users');
+Route::middleware(['auth', 'admin'])->group(function () {
+    // TAMBAHKAN ->name(...) PADA BARIS-BARIS INI
+    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products');
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
 
     // CRUD Products
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::post('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+    // Rute untuk CRUD Users
+    Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
+    Route::put('/users/{user:idUser}', [AdminController::class, 'updateUser'])->name('users.update');
+    Route::delete('/users/{user:idUser}', [AdminController::class, 'deleteUser'])->name('users.destroy');
 });
 
 require __DIR__.'/auth.php';

@@ -7,6 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, X } from 'lucide-react';
+import GuestLayout from '@/Layouts/GuestLayout';
+
+ProductsMonitoring.layout = (page: React.ReactNode) => <GuestLayout children={page} />;
 
 // Tipe data lengkap untuk produk
 interface Product {
@@ -86,18 +89,18 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
     // Handlers untuk submit form
     const handleCreateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        storeProduct(route('sipak.products.store'), { onSuccess: () => closeModal() });
+        storeProduct(route('admin.products.store'), { onSuccess: () => closeModal() });
     };
 
     const handleEditSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedProduct) return;
-        updateProduct(route('sipak.products.update', selectedProduct.idProduct), { onSuccess: () => closeModal() });
+        updateProduct(route('admin.products.update', selectedProduct.idProduct), { onSuccess: () => closeModal() });
     };
 
     const handleDeleteConfirm = () => {
         if (!selectedProduct) return;
-        router.delete(route('sipak.products.destroy', selectedProduct.idProduct), { onSuccess: () => closeModal() });
+        router.delete(route('admin.products.destroy', selectedProduct.idProduct), { onSuccess: () => closeModal() });
     };
 
     const renderFormFields = (data: any, setData: Function, errors: any) => (
@@ -149,9 +152,9 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
     return (
         <>
             <Head title="Products Monitoring" />
-            <div className="container mx-auto py-8">
+            <div className="container mx-auto py-8 ">
                 <div className="mb-4">
-                    <Link href="/sipak" className="m-4 top-4 left-4">
+                    <Link href="/admin" className="m-4 top-4 left-4">
                         <Button variant="outline" className="flex items-center gap-2">
                             <ArrowLeft size={16} />
                             Kembali ke Dashboard
@@ -169,7 +172,19 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                     {productList.length > 0 ? productList.map((product) => (
                                         <TableRow key={product.idProduct}>
                                             <TableCell>{product.idProduct}</TableCell>
-                                            <TableCell>{product.photo ? <img src={`/storage/${product.photo}`} alt={product.nameProduct} className="h-16 w-16 items-center" /> : <div className="h-16 w-16 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">No Photo</div>}</TableCell>
+                                            <TableCell className="flex justify-center">
+                                                {product.photo ? (
+                                                    <img
+                                                        src={`/storage/${product.photo}`}
+                                                        alt={product.nameProduct}
+                                                        className="h-16 w-16 items-center"
+                                                    />
+                                                ) : (
+                                                    <div className="h-16 w-16 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">
+                                                        No Photo
+                                                    </div>
+                                                )}
+                                        </TableCell>
                                             <TableCell className="font-medium">{product.nameProduct}</TableCell>
                                             <TableCell>{product.typeProduct}</TableCell>
                                             <TableCell>Rp {Number(product.price).toLocaleString('id-ID')}</TableCell>

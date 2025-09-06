@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             // Middleware HandleInertiaRequests kemungkinan sudah ada di sini
             \App\Http\Middleware\HandleInertiaRequests::class,
+            \Spatie\Csp\AddContentSecurityPolicy::class,
         ],
 
         'api' => [
@@ -46,6 +47,8 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
+
+
 
     /**
      * The application's middleware aliases.

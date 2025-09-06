@@ -1,6 +1,9 @@
 import { Head, useForm, Link } from '@inertiajs/react';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@/components/ui';
 import { FormEventHandler } from 'react';
+import GuestLayout from '@/Layouts/GuestLayout';
+
+Register.layout = (page: React.ReactNode) => <GuestLayout children={page} />;
 
 export default function Register() {
     // --- PERUBAHAN DI SINI ---
@@ -44,7 +47,7 @@ export default function Register() {
                                             <Label htmlFor="firstName">First Name</Label>
                                             <Input
                                                 id="firstName"
-                                                placeholder="John"
+                                                placeholder="Arjuna"
                                                 value={data.firstName}
                                                 onChange={(e) => setData('firstName', e.target.value)}
                                                 required
@@ -56,7 +59,7 @@ export default function Register() {
                                             <Label htmlFor="lastName">Last Name</Label>
                                             <Input
                                                 id="lastName"
-                                                placeholder="Doe"
+                                                placeholder="Dewangga"
                                                 value={data.lastName}
                                                 onChange={(e) => setData('lastName', e.target.value)}
                                                 required

@@ -75,7 +75,6 @@ export default function Favorites({ products }: { products: Product[] }) {
         <>
             <Head title="My Favorites" />
             <div className="min-h-screen bg-gray-100">
-                <SiteHeader />
                 <main className="container mx-auto py-8 px-4">
                     <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">My Favorite Products</h1>
 
@@ -91,7 +90,6 @@ export default function Favorites({ products }: { products: Product[] }) {
                         </div>
                     )}
                 </main>
-                <SiteFooter />
             </div>
         </>
     );

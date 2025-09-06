@@ -20,6 +20,8 @@ interface Product {
     linkProduct: string | null;
 }
 
+// Home.layout = (page: React.ReactNode) => <MainLayout children={page} />;
+
 // Fungsi untuk memformat tanggal
 const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -90,7 +92,6 @@ export default function Home({ popularProducts, newestProducts }: { popularProdu
                     <p className="text-center">👋 Selamat Datang di <strong>Estwo Computer</strong>! Tempat terbaik untuk laptop bekas berkualitas</p>
                 </div>
 
-                <SiteHeader />
                 <main className="container mx-auto p-4">
                     <section className="mb-8 flex flex-col items-center rounded-lg bg-white p-6 shadow-lg md:flex-row">
                         <div className="mb-4 flex h-48 w-full items-center justify-center rounded-lg bg-black md:mb-0 md:mr-6 md:w-1/2">
@@ -136,7 +137,6 @@ export default function Home({ popularProducts, newestProducts }: { popularProdu
                         </section>
                     </div>
                 </main>
-                <SiteFooter />
             </div>
         </>
     );
