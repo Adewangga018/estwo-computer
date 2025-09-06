@@ -1,7 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
-import { Button } from '@/components/ui';
-import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GuestLayout from '@/Layouts/GuestLayout';
+import React from 'react';
 
 AdminScreen.layout = (page: React.ReactNode) => <GuestLayout children={page} />;
 
@@ -9,26 +10,24 @@ export default function AdminScreen() {
     return (
         <>
             <Head title="Admin Dashboard" />
-            <div className="relative flex min-h-screen items-center justify-center bg-gray-100 p-4">
-                {/* Tombol Kembali */}
-                <Link href="/login" className="absolute top-4 left-4">
-                    <Button variant="outline" className="flex items-center gap-2">
-                        <ArrowLeft size={16} />
-                        Kembali ke Login
-                    </Button>
-                </Link>
-
-                <div className="w-full max-w-4xl rounded-lg bg-white p-8 shadow-lg">
-                    <h1 className="mb-8 text-center text-4xl font-bold text-gray-800">Admin Dashboard</h1>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                        <Link href="/admin/users" className="block rounded-lg bg-yellow-500 p-6 text-center text-white shadow-md transition-transform hover:scale-105">
-                            <h2 className="text-2xl font-semibold">Users Monitoring</h2>
+            <div className="container mx-auto flex h-screen items-center justify-center">
+                <Card className="w-full max-w-md">
+                    <CardHeader>
+                        <CardTitle className="text-center text-2xl">Admin Menu</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col space-y-4 p-6">
+                        <Link href={route('admin.products.index')}>
+                            <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white" size="lg">
+                                Products Monitoring
+                            </Button>
                         </Link>
-                        <Link href="/admin/products" className="block rounded-lg bg-yellow-500 p-6 text-center text-white shadow-md transition-transform hover:scale-105">
-                            <h2 className="text-2xl font-semibold">Products Monitoring</h2>
+                         <Link href="/">
+                            <Button className="w-full" size="lg" variant="outline">
+                                Back to Home
+                            </Button>
                         </Link>
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
             </div>
         </>
     );

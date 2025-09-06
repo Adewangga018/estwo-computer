@@ -20,21 +20,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/account', [AccountController::class, 'show'])->name('account');
 });
 
-// Rute Admin
+// Rute Admin (Hanya untuk Produk)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Route untuk dashboard utama admin
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    // Resource routes hanya untuk CRUD Products
     Route::resource('products', ProductController::class)->except(['create', 'edit', 'show']);
-    Route::resource('users', AdminController::class)->except(['create', 'edit', 'show']);
-
-    // CRUD Products
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-    Route::post('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-
-    // Rute untuk CRUD Users
-    Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
-    Route::put('/users/{user:idUser}', [AdminController::class, 'updateUser'])->name('users.update');
-    Route::delete('/users/{user:idUser}', [AdminController::class, 'deleteUser'])->name('users.destroy');
 });
 
 require __DIR__.'/auth.php';

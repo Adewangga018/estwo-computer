@@ -52,7 +52,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
 
     // Form hook untuk mengedit produk
     const { data: editData, setData: setEditData, post: updateProduct, processing: editProcessing, errors: editErrors } = useForm({
-        nameProduct: '', typeProduct: '', detailProduct: '', brandProduct: '', price: 0, grade: '', completenessProduct: '', specs: '', disability: '', linkProduct: '', photo: null as File | null, _method: 'POST'
+    nameProduct: '', typeProduct: '', detailProduct: '', brandProduct: '', price: 0, grade: '', completenessProduct: '', specs: '', disability: '', linkProduct: '', photo: null as File | null, _method: 'POST'
     });
 
     // Handlers untuk membuka modal
@@ -94,8 +94,10 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
 
     const handleEditSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!selectedProduct) return;
-        updateProduct(route('admin.products.update', selectedProduct.idProduct), { onSuccess: () => closeModal() });
+        // Panggil method `put` dari object `editForm`
+        editForm.put(route('admin.products.update', selectedProduct!.idProduct), {
+            onSuccess: () => setShowEdit(false),
+        });
     };
 
     const handleDeleteConfirm = () => {
@@ -152,7 +154,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
     return (
         <>
             <Head title="Products Monitoring" />
-            <div className="container mx-auto py-8 ">
+            <div className="container mx-auto py-8">
                 <div className="mb-4">
                     <Link href="/admin" className="m-4 top-4 left-4">
                         <Button variant="outline" className="flex items-center gap-2">
@@ -167,12 +169,12 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                         <div className="mb-4"><Button className="text-white bg-yellow-500 hover:bg-yellow-600" onClick={handleCreate}>Create New Product</Button></div>
                         <div className="overflow-x-auto justify-center text-center rounded-lg border">
                             <Table>
-                                <TableHeader><TableRow><TableHead>ID</TableHead><TableHead>Photo</TableHead><TableHead>Product Name</TableHead><TableHead>Type</TableHead><TableHead>Price</TableHead><TableHead className="text-center justify-center">Actions</TableHead></TableRow></TableHeader>
+                                <TableHeader><TableRow><TableHead>ID</TableHead><TableHead>Photo</TableHead><TableHead>Product Name</TableHead><TableHead>Price</TableHead><TableHead className="text-center justify-center">Actions</TableHead></TableRow></TableHeader>
                                 <TableBody>
                                     {productList.length > 0 ? productList.map((product) => (
                                         <TableRow key={product.idProduct}>
                                             <TableCell>{product.idProduct}</TableCell>
-                                            <TableCell>
+                                            <TableCell className="flex justify-center">
                                                 {/* UBAH BARIS DI BAWAH INI */}
                                                 {product.photo && (
                                                     <img
@@ -182,9 +184,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                                     />
                                                 )}
                                             </TableCell>
-                                            <TableCell>{product.nameProduct}</TableCell>
                                             <TableCell className="font-medium">{product.nameProduct}</TableCell>
-                                            <TableCell>{product.typeProduct}</TableCell>
                                             <TableCell>Rp {Number(product.price).toLocaleString('id-ID')}</TableCell>
                                             <TableCell className="text-center">
                                                 <div className="flex gap-2 justify-center">

@@ -112,13 +112,12 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
     return (
         <>
             <Head title="Users Monitoring"/>
-            <div className="mx-auto py-8 bg-gray-100">
-                {/* ... (Link kembali ke dashboard) ... */}
+            <div className="container mx-auto py-8">
                 <div className="mb-4">
                     <Link href="/admin" className="m-4 top-4 left-4">
                         <Button variant="outline" className="flex items-center gap-2">
                             <ArrowLeft size={16} />
-                             Kembali ke Dashboard
+                            Kembali ke Dashboard
                         </Button>
                     </Link>
                 </div>
@@ -130,7 +129,6 @@ export default function UsersMonitoring({ users }: { users: PaginatedUsers }) {
                         <div className="mb-4">
                             <Button className="text-white bg-yellow-500 hover:bg-yellow-600" onClick={handleCreate}>Create New User</Button>
                         </div>
-                        {/* 👇 PERUBAHAN DI SINI 👇 */}
                         <Table className="text-center align-middle">
                             <TableHeader>
                                 <TableRow>

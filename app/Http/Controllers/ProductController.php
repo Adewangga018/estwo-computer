@@ -9,16 +9,23 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
+        // UBAH BARIS DI BAWAH INI
         return Inertia::render('admin/ProductsMonitoring', [
-            'products' => Product::latest()->get()
+            'products' => Product::latest()->paginate(10) // Ganti dari get() menjadi paginate()
         ]);
     }
 
+    // ... (method store, update, destroy biarkan seperti yang sudah ada,
+    //      karena redirect()->route() sudah benar)
+
     public function store(Request $request)
     {
-        // Validasi sudah benar
+        // ... validasi
         $validatedData = $request->validate([
             'nameProduct' => 'required|string|max:150',
             'typeProduct' => 'nullable|string|max:100',
@@ -33,16 +40,10 @@ class ProductController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // --- AWAL LOGIKA UPLOAD FOTO YANG BENAR ---
         if ($request->hasFile('photo')) {
-            // 1. Ambil file dari request
-            $file = $request->file('photo');
-            // 2. Simpan file ke storage/app/public/products dan dapatkan path-nya
-            $path = $file->store('products', 'public');
-            // 3. Masukkan path yang benar ke dalam data yang akan disimpan
+            $path = $request->file('photo')->store('products', 'public');
             $validatedData['photo'] = $path;
         }
-        // --- AKHIR LOGIKA UPLOAD FOTO ---
 
         Product::create($validatedData);
 
@@ -51,31 +52,17 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        // ... (Validasi untuk update)
 
-        // Logika untuk menangani update foto jika ada file baru yang diupload
-        if ($request->hasFile('photo')) {
-            // Hapus foto lama jika ada
-            if ($product->photo) {
-                Storage::disk('public')->delete($product->photo);
-            }
-            // Simpan foto baru
-            $path = $request->file('photo')->store('products', 'public');
-            $request->merge(['photo' => $path]); // Tambahkan path baru ke request
-        }
-
-        $product->update($request->except('photo_file')); // Gunakan except untuk field sementara
+        $product->update($request->all());
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
     public function destroy(Product $product)
     {
-        // Hapus file foto dari storage sebelum menghapus data produk
         if ($product->photo) {
             Storage::disk('public')->delete($product->photo);
         }
-
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');

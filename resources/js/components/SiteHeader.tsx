@@ -28,9 +28,9 @@ export default function SiteHeader() {
     return (
         <header className="bg-black shadow-md sticky top-0 z-40">
             {/* Mobile Header - SEKARANG DENGAN FUNGSI PENCARIAN */}
-            <div className="sm:hidden px-4 py-3">
+            <div className="sm:hidden px-4 py-3 text-white">
                 <form onSubmit={handleSearch} className="relative w-full">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white" />
                     <Input
                         type="search"
                         placeholder="Cari produk..."
