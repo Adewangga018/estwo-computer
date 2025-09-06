@@ -21,11 +21,10 @@ Route::middleware('auth')->group(function () {
 });
 
 // Rute Admin
-Route::middleware(['auth', 'admin'])->group(function () {
-    // TAMBAHKAN ->name(...) PADA BARIS-BARIS INI
-    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products');
-    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::resource('products', ProductController::class)->except(['create', 'edit', 'show']);
+    Route::resource('users', AdminController::class)->except(['create', 'edit', 'show']);
 
     // CRUD Products
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');

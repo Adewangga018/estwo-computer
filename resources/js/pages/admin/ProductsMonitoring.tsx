@@ -172,19 +172,17 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                     {productList.length > 0 ? productList.map((product) => (
                                         <TableRow key={product.idProduct}>
                                             <TableCell>{product.idProduct}</TableCell>
-                                            <TableCell className="flex justify-center">
-                                                {product.photo ? (
+                                            <TableCell>
+                                                {/* UBAH BARIS DI BAWAH INI */}
+                                                {product.photo && (
                                                     <img
                                                         src={`/storage/${product.photo}`}
                                                         alt={product.nameProduct}
-                                                        className="h-16 w-16 items-center"
+                                                        className="w-16 h-16 object-cover rounded"
                                                     />
-                                                ) : (
-                                                    <div className="h-16 w-16 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">
-                                                        No Photo
-                                                    </div>
                                                 )}
-                                        </TableCell>
+                                            </TableCell>
+                                            <TableCell>{product.nameProduct}</TableCell>
                                             <TableCell className="font-medium">{product.nameProduct}</TableCell>
                                             <TableCell>{product.typeProduct}</TableCell>
                                             <TableCell>Rp {Number(product.price).toLocaleString('id-ID')}</TableCell>

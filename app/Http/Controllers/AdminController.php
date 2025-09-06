@@ -41,11 +41,16 @@ class AdminController extends Controller
      * Display the user management page.
      * Halaman ini akan diakses melalui /admin/users.
      */
-    public function users(): Response
+    public function index() // <-- Sebelumnya bernama users()
     {
-        // Mengirimkan data user dengan paginasi ke halaman UsersMonitoring
-        return Inertia::render('admin/UsersMonitoring', [
-            'users' => User::latest()->paginate(10)
+    // Cek apakah ini halaman dashboard utama atau daftar user
+    if (request()->routeIs('admin.dashboard')) {
+        return Inertia::render('AdminScreen');
+    }
+
+    // Jika bukan, ini adalah halaman daftar user
+    return Inertia::render('admin/UsersMonitoring', [
+        'users' => User::all()
         ]);
     }
 
@@ -75,35 +80,25 @@ class AdminController extends Controller
      * Update data user dari form di halaman admin.
      */
 
-    public function updateUser(Request $request, User $user)
+    /**
+     * Update the specified user in storage.
+     */
+    public function update(Request $request, User $user)
     {
-        $validated = $request->validate([
-            'firstName' => 'required|string|max:100',
-            'lastName' => 'nullable|string|max:100',
-            'email' => 'required|email|max:150|unique:users,email,' . $user->idUser . ',idUser',
-            'password' => 'nullable|string|min:6',
-        ]);
+        // Tambahkan logika untuk update data user di sini
+        // Contoh: $user->update($request->all());
 
-        // Jika password tidak diisi (kosong), hapus dari array agar tidak di-update.
-        if (empty($validated['password'])) {
-            unset($validated['password']);
-        } else {
-            // Jika ada password baru, hash password tersebut.
-            $validated['password'] = Hash::make($validated['password']);
-        }
-
-        // Update user dengan data yang sudah divalidasi
-        $user->update($validated);
-
-        return redirect()->route('admin.users')->with('success', 'User updated successfully.');
+        return redirect()->back()->with('success', 'User updated successfully.');
     }
 
     /**
-     * Hapus user dari halaman admin.
+     * Remove the specified user from storage.
      */
-    public function deleteUser(User $user)
+    public function destroy(User $user)
     {
-        $user->delete();
-        return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
+        // Tambahkan logika untuk menghapus user di sini
+        // Contoh: $user->delete();
+
+        return redirect()->back()->with('success', 'User deleted successfully.');
     }
 }

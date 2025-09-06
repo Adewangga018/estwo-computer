@@ -11,6 +11,11 @@ class Product extends Model
 
     protected $primaryKey = 'idProduct';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'nameProduct',
         'typeProduct',
