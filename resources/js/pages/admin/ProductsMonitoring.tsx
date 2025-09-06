@@ -52,7 +52,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
 
     // Form hook untuk mengedit produk
     const { data: editData, setData: setEditData, post: updateProduct, processing: editProcessing, errors: editErrors } = useForm({
-    nameProduct: '', typeProduct: '', detailProduct: '', brandProduct: '', price: 0, grade: '', completenessProduct: '', specs: '', disability: '', linkProduct: '', photo: null as File | null, _method: 'POST'
+        nameProduct: '', typeProduct: '', detailProduct: '', brandProduct: '', price: 0, grade: '', completenessProduct: '', specs: '', disability: '', linkProduct: '', photo: null as File | null, _method: 'PUT'
     });
 
     // Handlers untuk membuka modal
@@ -73,7 +73,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
             disability: product.disability || '',
             linkProduct: product.linkProduct || '', // Tambahkan ini
             photo: null,
-            _method: 'POST'
+            _method: 'PUT'
         });
         setShowEdit(true);
     };
@@ -93,12 +93,13 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
     };
 
     const handleEditSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Panggil method `put` dari object `editForm`
-        editForm.put(route('admin.products.update', selectedProduct!.idProduct), {
-            onSuccess: () => setShowEdit(false),
-        });
-    };
+    e.preventDefault();
+    if (!selectedProduct) return;
+
+    updateProduct(route('admin.products.update', selectedProduct.idProduct), {
+        onSuccess: () => closeModal(), // Gunakan closeModal agar konsisten
+    });
+};
 
     const handleDeleteConfirm = () => {
         if (!selectedProduct) return;

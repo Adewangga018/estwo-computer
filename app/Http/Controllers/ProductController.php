@@ -51,12 +51,38 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, Product $product)
-    {
+{
+    // Validasi data yang masuk, mirip dengan method store
+    $validatedData = $request->validate([
+        'nameProduct' => 'required|string|max:150',
+        'typeProduct' => 'nullable|string|max:100',
+        'detailProduct' => 'nullable|string',
+        'brandProduct' => 'nullable|string|max:100',
+        'price' => 'required|numeric|min:0',
+        'grade' => 'nullable|string|max:50',
+        'completenessProduct' => 'nullable|string|max:255',
+        'specs' => 'nullable|string',
+        'disability' => 'nullable|string',
+        'linkProduct' => 'nullable|string|max:255',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
 
-        $product->update($request->all());
-
-        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+    // Logika untuk menangani upload foto baru
+    if ($request->hasFile('photo')) {
+        // Hapus foto lama jika ada
+        if ($product->photo) {
+            Storage::disk('public')->delete($product->photo);
+        }
+        // Simpan foto baru dan update path di data validasi
+        $path = $request->file('photo')->store('products', 'public');
+        $validatedData['photo'] = $path;
     }
+
+    // Update produk dengan data yang sudah divalidasi
+    $product->update($validatedData);
+
+    return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+}
 
     public function destroy(Product $product)
     {

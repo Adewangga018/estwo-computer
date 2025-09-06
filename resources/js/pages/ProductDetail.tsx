@@ -102,37 +102,43 @@ export default function ProductDetail({ product, isFavorited }: { product: Produ
                             </Button>
                         </div>
                         <div className="flex flex-col md:flex-row gap-8">
-                            <div className="md:w-1/3">
+                            <div className="md:w-1/3 relative">
                                 {product.photo ?
                                     <img src={`/storage/${product.photo}`} alt={product.nameProduct} className="w-full h-auto object-cover rounded-lg shadow-md aspect-square" /> :
                                     <div className="w-full h-full aspect-square bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">No Photo</div>
                                 }
+                                {product.grade && (
+                                    <div className="absolute top-2 right-2">
+                                        <span className="bg-yellow-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                                            Grade {product.grade}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                             <div className="md:w-2/3">
+                            <div className="mt-6 flex flex-col sm:flex-row gap-4"> {/* Menggunakan flex-row untuk tombol */}
+                                {product.linkProduct && ( // Tampilkan tombol video hanya jika ada link
+                                    <Button
+                                        size="lg"
+                                        onClick={() => setShowVideoModal(true)}
+                                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
+                                    >
+                                        Video Produk
+                                    </Button>
+                                )}
+                                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
+                                    <Button size="lg" className="w-full">
+                                        Hubungi Penjual
+                                    </Button>
+                                </a>
+                            </div>
                                 <dl className="text-sm">
-                                    <DetailRow label="Product ID" value={product.idProduct} />
                                     <DetailRow label="Product Name" value={product.nameProduct} />
                                     <DetailRow label="Brand" value={product.brandProduct} />
                                     <DetailRow label="Type" value={product.typeProduct} />
                                     <DetailRow label="Price" value={`Rp ${Number(product.price).toLocaleString('id-ID')}`} />
-                                    <DetailRow label="Grade" value={product.grade} />
                                     <DetailRow label="Completeness" value={product.completenessProduct} />
                                 </dl>
-                                <div className="mt-6 flex flex-col sm:flex-row gap-4"> {/* Menggunakan flex-row untuk tombol */}
-                                     <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
-                                        <Button size="lg" className="w-full bg-yellow-500 hover:bg-yellow-600 text-white">
-                                            Hubungi Penjual
-                                        </Button>
-                                     </a>
-                                     {product.linkProduct && ( // Tampilkan tombol video hanya jika ada link
-                                        <Button
-                                            size="lg"
-                                            onClick={() => setShowVideoModal(true)}
-                                        >
-                                            Video Produk
-                                        </Button>
-                                     )}
-                                </div>
                             </div>
                         </div>
                         <div className="mt-6 space-y-4 text-sm">

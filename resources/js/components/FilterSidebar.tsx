@@ -10,7 +10,6 @@ interface FilterSidebarProps {
         price: string;
         specs: string;
         brandProduct: string;
-        stockProduct: string;
     };
     setData: (key: string, value: string) => void;
     submit: (e: React.FormEvent) => void;

@@ -12,7 +12,7 @@ export default function SiteFooter() {
                             <img src="/images/estwo-logo.png" alt="Estwo Computer Logo" className="h-12 w-auto" />
                             <h2 className="ml-4 text-3xl font-bold">ESTWO COMPUTER</h2>
                         </div>
-                        <p className="text-gray-400">
+                        <p className="text-gray-400 text-justify">
                             Spesialis laptop bekas berkualitas dengan garansi terpercaya. Kami menyediakan pilihan terbaik untuk kebutuhan mahasiswa dan profesional dengan harga yang terjangkau.
                         </p>
                     </div>

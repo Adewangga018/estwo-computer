@@ -79,7 +79,7 @@ export default function Favorites({ products }: { products: Product[] }) {
                     <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">My Favorite Products</h1>
 
                     {products.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {products.map((product) => (
                                 <ProductCard key={product.idProduct} product={product} />
                             ))}
