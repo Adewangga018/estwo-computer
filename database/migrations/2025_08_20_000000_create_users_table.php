@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('lastName', 100)->nullable();
             $table->string('email', 150)->unique();
             $table->string('password');
-            $table->boolean('is_admin')->default(false);
+            $table->boolean('isAdmin')->default(false);
             $table->timestamps();
         });
     }

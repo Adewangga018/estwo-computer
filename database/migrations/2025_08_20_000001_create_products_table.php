@@ -10,10 +10,12 @@ return new class extends Migration {
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('idProduct');
             $table->string('nameProduct', 150);
-            $table->string('typeProduct', 100)->nullable();
+            $table->enum('typeProduct', ['Gaming', 'Non-Gaming'])->nullable();
             $table->text('detailProduct')->nullable();
             $table->string('brandProduct', 100)->nullable();
             $table->decimal('price', 15, 2)->default(0);
+            $table->boolean('isDiscount')->default(false);
+            $table->integer('discountPercentage')->nullable();
             $table->string('grade', 50)->nullable();
             $table->string('completenessProduct', 255)->nullable();
             $table->text('specs')->nullable();

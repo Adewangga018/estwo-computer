@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, X } from 'lucide-react';
+import { ArrowLeft, X, BoltIcon } from 'lucide-react';
 import GuestLayout from '@/Layouts/GuestLayout';
 
 ProductsMonitoring.layout = (page: React.ReactNode) => <GuestLayout children={page} />;
@@ -15,10 +15,13 @@ ProductsMonitoring.layout = (page: React.ReactNode) => <GuestLayout children={pa
 interface Product {
     idProduct: number;
     nameProduct: string;
-    typeProduct: string | null;
+    typeProduct: 'Gaming' | 'Non-Gaming' | null;
     detailProduct: string | null;
     brandProduct: string | null;
     price: number;
+    isDiscount: boolean;
+    discountPercentage: number | null;
+    priceDiscount: number;
     grade: string | null;
     completenessProduct: string | null;
     specs: string | null;
@@ -38,6 +41,8 @@ interface PaginatedProducts {
 export default function ProductsMonitoring({ products }: { products: PaginatedProducts }) {
     const productList = products?.data ?? [];
 
+    console.log('Data Produk yang Diterima:', productList);
+
     const [showCreate, setShowCreate] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
@@ -47,31 +52,58 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
 
     // Form hook untuk membuat produk baru
     const { data: createData, setData: setCreateData, post: storeProduct, processing: createProcessing, errors: createErrors, reset: resetCreateForm } = useForm({
-        nameProduct: '', typeProduct: 'Laptop', detailProduct: '', brandProduct: '', price: 0, grade: 'A', completenessProduct: 'Satu set', specs: '', disability: '', linkProduct: '', photo: null as File | null,
+        nameProduct: '',
+        typeProduct: 'Non-Gaming' as 'Gaming' | 'Non-Gaming',
+        detailProduct: '',
+        brandProduct: '',
+        price: 0,
+        isDiscount: false,
+        discountPercentage: 0,
+        grade: 'A',
+        completenessProduct: 'Satu set',
+        specs: '',
+        disability: '',
+        linkProduct: '',
+        photo: null as File | null,
     });
 
     // Form hook untuk mengedit produk
     const { data: editData, setData: setEditData, post: updateProduct, processing: editProcessing, errors: editErrors } = useForm({
-        nameProduct: '', typeProduct: '', detailProduct: '', brandProduct: '', price: 0, grade: '', completenessProduct: '', specs: '', disability: '', linkProduct: '', photo: null as File | null, _method: 'PUT'
+        nameProduct: '',
+        typeProduct: 'Non-Gaming' as 'Gaming' | 'Non-Gaming',
+        detailProduct: '',
+        brandProduct: '',
+        price: 0,
+        isDiscount: false,
+        discountPercentage: 0,
+        grade: 'A',
+        completenessProduct: 'Satu set',
+        specs: '',
+        disability: '',
+        linkProduct: '',
+        photo: null as File | null,
+        _method: 'PUT'
     });
 
     // Handlers untuk membuka modal
     const handleCreate = () => { resetCreateForm(); setShowCreate(true); };
     const handleDelete = (product: Product) => { setSelectedProduct(product); setShowDelete(true); };
-    const handleDetail = (product: Product) => { setSelectedProduct(product); setShowDetail(true); }; // Handler baru
+    const handleDetail = (product: Product) => { setSelectedProduct(product); setShowDetail(true); };
     const handleEdit = (product: Product) => {
         setSelectedProduct(product);
         setEditData({
             nameProduct: product.nameProduct,
-            typeProduct: product.typeProduct || '',
+            typeProduct: product.typeProduct || 'Non-Gaming',
             detailProduct: product.detailProduct || '',
             brandProduct: product.brandProduct || '',
             price: product.price,
+            isDiscount: product.isDiscount,
+            discountPercentage: product.discountPercentage || 0,
             grade: product.grade || 'A',
             completenessProduct: product.completenessProduct || 'Satu set',
             specs: product.specs || '',
             disability: product.disability || '',
-            linkProduct: product.linkProduct || '', // Tambahkan ini
+            linkProduct: product.linkProduct || '',
             photo: null,
             _method: 'PUT'
         });
@@ -82,7 +114,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
         setShowCreate(false);
         setShowEdit(false);
         setShowDelete(false);
-        setShowDetail(false); // Tutup juga modal detail
+        setShowDetail(false);
         setSelectedProduct(null);
     };
 
@@ -98,12 +130,20 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
 
     updateProduct(route('admin.products.update', selectedProduct.idProduct), {
         onSuccess: () => closeModal(), // Gunakan closeModal agar konsisten
-    });
-};
+        });
+    };
 
     const handleDeleteConfirm = () => {
         if (!selectedProduct) return;
         router.delete(route('admin.products.destroy', selectedProduct.idProduct), { onSuccess: () => closeModal() });
+    };
+
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(amount);
     };
 
     const renderFormFields = (data: any, setData: Function, errors: any) => (
@@ -111,12 +151,30 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div><Label htmlFor="nameProduct">Product Name</Label><Input id="nameProduct" value={data.nameProduct} onChange={e => setData('nameProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.nameProduct}</p></div>
                 <div><Label htmlFor="brandProduct">Brand</Label><Input id="brandProduct" value={data.brandProduct} onChange={e => setData('brandProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.brandProduct}</p></div>
-                <div><Label htmlFor="typeProduct">Type</Label><Input id="typeProduct" value={data.typeProduct} onChange={e => setData('typeProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.typeProduct}</p></div>
+                <div>
+                    <Label htmlFor="typeProduct">Type</Label>
+                    <select id="typeProduct" className="w-full border p-2 rounded-md h-10" value={data.typeProduct} onChange={e => setData('typeProduct', e.target.value)}>
+                        <option value="Non-Gaming">Non-Gaming</option>
+                        <option value="Gaming">Gaming</option>
+                    </select>
+                    <p className="text-red-500 text-sm mt-1">{errors.typeProduct}</p>
+                </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div><Label htmlFor="price">Price</Label><Input id="price" type="number" value={data.price} onChange={e => setData('price', Number(e.target.value))} /><p className="text-red-500 text-sm mt-1">{errors.price}</p></div>
                 <div><Label htmlFor="grade">Grade</Label><select id="grade" className="w-full border p-2 rounded-md h-10" value={data.grade} onChange={e => setData('grade', e.target.value)}><option>A</option><option>B</option><option>C</option></select><p className="text-red-500 text-sm mt-1">{errors.grade}</p></div>
             </div>
+            <div className="flex items-center space-x-2">
+                <input type="checkbox" id="isDiscount" checked={data.isDiscount} onChange={e => setData('isDiscount', e.target.checked)} />
+                <Label htmlFor="isDiscount">Is Discount?</Label>
+            </div>
+            {data.isDiscount && (
+                <div>
+                    <Label htmlFor="discountPercentage">Discount Percentage</Label>
+                    <Input id="discountPercentage" type="number" value={data.discountPercentage} onChange={e => setData('discountPercentage', Number(e.target.value))} />
+                    <p className="text-red-500 text-sm mt-1">{errors.discountPercentage}</p>
+                </div>
+            )}
             <div><Label htmlFor="completenessProduct">Completeness</Label><select id="completenessProduct" className="w-full border p-2 rounded-md h-10" value={data.completenessProduct} onChange={e => setData('completenessProduct', e.target.value)}><option>Satu set</option><option>Batangan</option></select><p className="text-red-500 text-sm mt-1">{errors.completenessProduct}</p></div>
             <div><Label htmlFor="detailProduct">Description</Label><Textarea id="detailProduct" value={data.detailProduct} onChange={e => setData('detailProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.detailProduct}</p></div>
             <div><Label htmlFor="specs">Specifications</Label><Textarea id="specs" value={data.specs} onChange={e => setData('specs', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.specs}</p></div>
@@ -170,24 +228,59 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                         <div className="mb-4"><Button className="text-white bg-yellow-500 hover:bg-yellow-600" onClick={handleCreate}>Create New Product</Button></div>
                         <div className="overflow-x-auto justify-center text-center rounded-lg border">
                             <Table>
-                                <TableHeader><TableRow><TableHead>ID</TableHead><TableHead>Photo</TableHead><TableHead>Product Name</TableHead><TableHead>Price</TableHead><TableHead className="text-center justify-center">Actions</TableHead></TableRow></TableHeader>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>ID</TableHead>
+                                        <TableHead>Photo</TableHead>
+                                        <TableHead>Product Name</TableHead>
+                                        <TableHead>Price</TableHead>
+                                        <TableHead>Discount</TableHead>
+                                        <TableHead>Price Discount</TableHead>
+                                        <TableHead className="text-center">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
                                 <TableBody>
                                     {productList.length > 0 ? productList.map((product) => (
                                         <TableRow key={product.idProduct}>
                                             <TableCell>{product.idProduct}</TableCell>
                                             <TableCell className="flex justify-center">
-                                                {/* UBAH BARIS DI BAWAH INI */}
-                                                {product.photo && (
+                                                {product.photo ? (
                                                     <img
                                                         src={`/storage/${product.photo}`}
                                                         alt={product.nameProduct}
                                                         className="w-16 h-16 object-cover rounded"
                                                     />
+                                                ) : (
+                                                    <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
+                                                        No Image
+                                                    </div>
                                                 )}
                                             </TableCell>
                                             <TableCell className="font-medium">{product.nameProduct}</TableCell>
-                                            <TableCell>Rp {Number(product.price).toLocaleString('id-ID')}</TableCell>
-                                            <TableCell className="text-center">
+                                            <TableCell>
+                                                {formatCurrency(product.price)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {/* Menampilkan persentase diskon jika ada */}
+                                                {product.isDiscount && product.discountPercentage ? (
+                                                    <span className="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                                                        {product.discountPercentage}%
+                                                    </span>
+                                                ) : (
+                                                    <span>-</span>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {/* Menampilkan harga setelah diskon jika ada */}
+                                                {product.isDiscount && product.discountPercentage ? (
+                                                    <span className="font-semibold text-green-700">
+                                                        {formatCurrency(product.priceDiscount)}
+                                                    </span>
+                                                ) : (
+                                                    <span>-</span>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
                                                 <div className="flex gap-2 justify-center">
                                                     <Button className="bg-gray-500 hover:bg-gray-600 text-white" size="sm" onClick={() => handleDetail(product)}>Detail</Button>
                                                     <Button className="bg-yellow-500 hover:bg-yellow-600 text-white" size="sm" onClick={() => handleEdit(product)}>Edit</Button>
@@ -195,7 +288,13 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                                 </div>
                                             </TableCell>
                                         </TableRow>
-                                    )) : <TableRow><TableCell colSpan={7} className="text-center h-24">No products found.</TableCell></TableRow>}
+                                    )) : (
+                                        <TableRow>
+                                            <TableCell colSpan={7} className="text-center h-24">
+                                                No products found.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
                                 </TableBody>
                             </Table>
                         </div>

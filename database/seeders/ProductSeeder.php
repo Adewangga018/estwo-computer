@@ -13,8 +13,9 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-        ProductSeeder::class, // Pastikan baris ini ada
-        ]);
+        // Hapus semua kode lain di dalam fungsi ini
+        // dan ganti dengan baris di bawah ini.
+        // Ini akan membuat 50 produk menggunakan factory yang baru saja kita buat.
+        // Product::factory()->count(50)->create();
     }
 }

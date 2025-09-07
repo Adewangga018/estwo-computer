@@ -25,7 +25,7 @@ class RedirectIfAuthenticated
 
                 // Jika pengguna yang sudah login adalah admin,
                 // arahkan ke dashboard admin.
-                if (Auth::user()->is_admin) {
+                if (Auth::user()->isadmin) {
                     return redirect(route('admin.dashboard'));
                 }
 
