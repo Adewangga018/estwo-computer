@@ -116,7 +116,7 @@ export default function ProductDetail({ product, isFavorited }: { product: Produ
                                 )}
                             </div>
                             <div className="md:w-2/3">
-                            <div className="mt-6 flex flex-col sm:flex-row gap-4"> {/* Menggunakan flex-row untuk tombol */}
+                            <div className="flex flex-col sm:flex-row gap-4"> {/* Menggunakan flex-row untuk tombol */}
                                 {product.linkProduct && ( // Tampilkan tombol video hanya jika ada link
                                     <Button
                                         size="lg"

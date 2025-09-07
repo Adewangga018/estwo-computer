@@ -53,15 +53,6 @@ export default function FilterSidebar({ data, setData, submit, reset, processing
                             onChange={(e) => setData('brandProduct', e.target.value)}
                         />
                     </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="stockProduct">Stok</Label>
-                        <Input
-                            id="stockProduct"
-                            placeholder="Ketik 'Tersedia'"
-                            value={data.stockProduct}
-                            onChange={(e) => setData('stockProduct', e.target.value)}
-                        />
-                    </div>
                     <div className="flex space-x-2 pt-4">
                         <Button type="button" variant="secondary" className="w-full" onClick={reset} disabled={processing}>
                             Reset
