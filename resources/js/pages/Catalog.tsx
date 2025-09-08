@@ -82,6 +82,7 @@ export default function Catalog({ products, filters }: { products: Product[], fi
     const { data, setData, get, processing } = useForm({
         search: filters.search || '',
         price: filters.price || '',
+        type: filters.type || '',
         specs: filters.specs || '',
         brandProduct: filters.brandProduct || '',
         // Hapus stockProduct dari form filter
@@ -107,12 +108,12 @@ export default function Catalog({ products, filters }: { products: Product[], fi
         <>
             <Head title="Catalog" />
             <div className="min-h-screen bg-gray-100">
-                <main className="container mx-auto py-8 px-4">
-                    <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">Our Product Catalog</h1>
+                <main className="container mx-auto py-4 px-2">
+                    <h1 className="text-3xl font-bold mb-2 text-center text-gray-800">Our Product Catalog</h1>
                     <div className="lg:hidden">
                             <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                                 <SheetTrigger asChild>
-                                    <Button variant="outline">
+                                    <Button variant="outline" className="m-5">
                                         <Filter className="mr-2 h-4 w-4" />
                                         Filter
                                     </Button>
@@ -144,7 +145,7 @@ export default function Catalog({ products, filters }: { products: Product[], fi
                         </aside>
                         <div className="lg:col-span-3">
                             {products.length > 0 ? (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                <div className="justify-items-center grid grid-cols-2 sm:grid-cols-3 gap-4">
                                     {products.map((product) => (
                                         <ProductCard key={product.idProduct} product={product} />
                                     ))}

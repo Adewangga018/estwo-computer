@@ -1,72 +1,77 @@
 import { Head, Link } from '@inertiajs/react';
-import SiteHeader from '@/components/SiteHeader';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import SiteFooter from '@/components/SiteFooter';
-
-// Definisikan tipe data untuk produk yang sudah direvisi
-interface Product {
-    idProduct: number;
-    nameProduct: string;
-    price: number;
-    photo: string | null;
-    grade: string | null;
-    detailProduct: string | null;
-    created_at: string;
-    linkProduct: string | null; // Ditambahkan
-}
-
-// Fungsi untuk memformat tanggal
-const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('id-ID', options);
-};
+import { formatCurrency } from '@/lib/utils';
+import { Product } from '@/types/global';
 
 // Komponen kartu produk
 const ProductCard = ({ product }: { product: Product }) => (
-    <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg h-full">
-        <CardHeader className="p-0 relative">
-            <div className="aspect-square w-full bg-gray-200">
-                {product.photo ? (
-                    <img
-                        src={`/storage/${product.photo}`}
-                        alt={product.nameProduct}
-                        className="w-full h-full object-cover"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-500">
-                        No Image
+    // Untuk mobile, kartu akan memiliki lebar tetap agar bisa di-scroll
+    <div className="w-[150px] sm:w-full flex-shrink-0">
+        <Card className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">
+            <CardHeader className="relative p-0">
+                <div className="aspect-square w-full bg-gray-200">
+                    {product.photo ? (
+                        <img
+                            src={`/storage/${product.photo}`}
+                            alt={product.nameProduct}
+                            className="h-full w-full object-cover"
+                        />
+                    ) : (
+                        <div className="flex h-full w-full items-center justify-center text-gray-500">
+                            No Image
+                        </div>
+                    )}
+                </div>
+                {product.grade && (
+                    <div className="absolute right-3 top-3">
+                        <span className="rounded-full bg-yellow-500 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
+                            Grade {product.grade}
+                        </span>
                     </div>
                 )}
-            </div>
-            {product.grade && (
-                <Badge className="absolute top-2 right-2 bg-yellow-500 text-white border-none">
-                    Grade {product.grade}
-                </Badge>
-            )}
-        </CardHeader>
-        <CardContent className="p-4 flex-grow flex flex-col">
-            <CardTitle className="text-lg font-semibold mb-2 text-gray-800">{product.nameProduct}</CardTitle>
-            <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-grow">
-                {product.detailProduct || 'No description available.'}
-            </p>
-            <p className="text-xl font-bold text-gray-900">
-                Rp {Number(product.price).toLocaleString('id-ID')}
-            </p>
-            <div className="flex justify-between text-sm text-gray-500 mt-1">
-                {/* Info stok dihapus */}
-                <span className="font-semibold">{formatDate(product.created_at)}</span>
-            </div>
-        </CardContent>
-        <CardFooter className="p-4 pt-0 mt-auto">
-            <Link href={route('catalog.show', product.idProduct)} className="w-full">
-                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white">
-                    View Details
-                </Button>
-            </Link>
-        </CardFooter>
-    </Card>
+            </CardHeader>
+            <CardContent className="flex flex-grow flex-col p-2">
+                <div className="mb-1">
+                    <CardTitle className="text-sm font-semibold text-gray-800 line-clamp-2">
+                        {product.nameProduct}
+                    </CardTitle>
+                </div>
+            </CardContent>
+            <CardFooter className="mt-auto flex flex-col items-stretch p-2 pt-0">
+                <div className="mb-2 flex items-end justify-between">
+                    <div className="text-left">
+                        {product.isDiscount && product.priceDiscount !== null ? (
+                            <div>
+                                <div className="flex items-center gap-1">
+                                    <p className="text-xs text-red-600 line-through">
+                                        {formatCurrency(product.price)}
+                                    </p>
+                                    {product.discountPercentage > 0 && (
+                                        <span className="rounded bg-red-100 px-1 py-0.5 text-[0.5rem] font-medium text-red-800">
+                                            {product.discountPercentage}%
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-md font-bold text-gray-900">
+                                    {formatCurrency(product.priceDiscount)}
+                                </p>
+                            </div>
+                        ) : (
+                            <p className="text-md font-bold text-gray-900">
+                                {formatCurrency(product.price)}
+                            </p>
+                        )}
+                    </div>
+                </div>
+                <Link href={route('catalog.show', product.idProduct)} className="w-full">
+                    <Button className="w-full h-8 text-xs bg-yellow-500 text-white hover:bg-yellow-600">
+                        Details
+                    </Button>
+                </Link>
+            </CardFooter>
+        </Card>
+    </div>
 );
 
 // Halaman Favorit utama
@@ -76,7 +81,7 @@ export default function Favorites({ products }: { products: Product[] }) {
             <Head title="My Favorites" />
             <div className="min-h-screen bg-gray-100">
                 <main className="container mx-auto py-8 px-4">
-                    <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">My Favorite Products</h1>
+                    <h1 className="text-3xl font-bold mb-4 text-center text-gray-800">My Favorite Products</h1>
 
                     {products.length > 0 ? (
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
