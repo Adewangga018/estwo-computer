@@ -1,9 +1,9 @@
 import { Head, router, usePage } from '@inertiajs/react';
-import SiteHeader from '@/components/SiteHeader';
 import { Button } from '@/components/ui/button';
 import { Heart, X } from 'lucide-react';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
+import { PageProps } from '@/types/global';
 
 // Definisikan tipe data lengkap untuk satu produk
 interface Product {
@@ -13,31 +13,26 @@ interface Product {
     detailProduct: string | null;
     brandProduct: string | null;
     price: number;
+    isDiscount: boolean; // <-- Ditambahkan
+    discountPercentage: number | null; // <-- Ditambahkan
+    priceDiscount: number | null; // <-- Ditambahkan
     grade: string | null;
     completenessProduct: string | null;
     specs: string | null;
     disability: string | null;
-    linkProduct: string | null; // Kolom baru
+    linkProduct: string | null;
     photo: string | null;
     created_at: string;
     updated_at: string;
 }
 
-// Komponen untuk menampilkan baris detail
-const DetailRow = ({ label, value }: { label: string; value: string | number | null }) => (
-    <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 border-b last:border-b-0">
-        <dt className="text-sm font-medium leading-6 text-gray-600">{label}</dt>
-        <dd className="mt-1 text-sm leading-6 text-gray-800 sm:col-span-2 sm:mt-0">{value || '-'}</dd>
-    </div>
-);
-
 export default function ProductDetail({ product, isFavorited }: { product: Product, isFavorited: boolean }) {
-    const { props } = usePage();
+    const { props } = usePage<PageProps>();
     const user = props.auth?.user;
     const [favorited, setFavorited] = useState(isFavorited);
-    const [showVideoModal, setShowVideoModal] = useState(false); // State untuk modal video
+    const [showVideoModal, setShowVideoModal] = useState(false);
 
-    const sellerWhatsAppNumber = '6285194574812'; // Nomor WhatsApp penjual di Surabaya, Jawa Timur
+    const sellerWhatsAppNumber = '6285194574812';
     const whatsappMessage = `Halo, saya tertarik dengan produk "${product.nameProduct}" yang ada di website Anda. Apakah masih tersedia? Saya dari Surabaya, Jawa Timur.`;
     const whatsappUrl = `https://wa.me/${sellerWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
@@ -52,38 +47,16 @@ export default function ProductDetail({ product, isFavorited }: { product: Produ
         });
     };
 
-    // Fungsi untuk mendapatkan URL embed dari berbagai platform
     const getEmbedUrl = (url: string | null): string | null => {
         if (!url) return null;
-
-        // YouTube
         const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         const youtubeMatch = url.match(youtubeRegExp);
         if (youtubeMatch && youtubeMatch[2].length === 11) {
             return `https://www.youtube.com/embed/${youtubeMatch[2]}`;
         }
-
-        // TikTok (hanya bisa dengan URL embed resmi jika tersedia, atau mengarah ke TikTok)
-        // Catatan: TikTok embed lebih kompleks dan sering membutuhkan JS SDK mereka
-        if (url.includes('tiktok.com')) {
-            // Ini adalah pendekatan paling sederhana, langsung ke URL aslinya atau cari embed code
-            // Untuk embed yang benar, biasanya butuh embed code dari TikTok langsung
-            // Contoh URL embed yang mungkin berhasil (tidak dijamin 100%):
-            // return `https://www.tiktok.com/embed/v2/${matchId}?embed_type=iframe`
-            // Untuk POC, kita bisa arahkan ke URL TikTok aslinya
-            return url; // Mengarahkan ke link TikTok langsung atau bisa diubah menjadi embed jika formatnya diketahui
-        }
-
-        // Instagram (butuh embed code dari Instagram atau URL oEmbed)
-        // Mirip dengan TikTok, Instagram memiliki batasan embed.
-        // Untuk POC, kita bisa arahkan ke URL Instagram aslinya
         if (url.includes('instagram.com/reel/') || url.includes('instagram.com/p/')) {
-            // Ini biasanya membutuhkan endpoint oEmbed atau embed code dari Instagram.
-            // Sebagai alternatif, kita bisa arahkan ke URL postingan Instagram itu sendiri
-            return url + '/embed'; // Ini mungkin bekerja untuk beberapa kasus embed Instagram
+            return url + '/embed';
         }
-
-        // Asumsi link lain mungkin bisa di-embed langsung jika formatnya pas (misal iframe langsung)
         return url;
     };
 
@@ -116,32 +89,61 @@ export default function ProductDetail({ product, isFavorited }: { product: Produ
                                 )}
                             </div>
                             <div className="md:w-2/3">
-                            <div className="flex flex-col sm:flex-row gap-4"> {/* Menggunakan flex-row untuk tombol */}
-                                {product.linkProduct && ( // Tampilkan tombol video hanya jika ada link
-                                    <Button
-                                        size="lg"
-                                        onClick={() => setShowVideoModal(true)}
-                                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
-                                    >
-                                        Video Produk
-                                    </Button>
-                                )}
-                                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
-                                    <Button size="lg" className="w-full">
-                                        Hubungi Penjual
-                                    </Button>
-                                </a>
-                            </div>
-                                <dl className="text-sm">
-                                    <DetailRow label="Product Name" value={product.nameProduct} />
-                                    <DetailRow label="Brand" value={product.brandProduct} />
-                                    <DetailRow label="Type" value={product.typeProduct} />
-                                    <DetailRow label="Price" value={`Rp ${Number(product.price).toLocaleString('id-ID')}`} />
-                                    <DetailRow label="Completeness" value={product.completenessProduct} />
-                                </dl>
+                                <div className="flex flex-col sm:flex-row gap-4 mb-4">
+                                    {product.linkProduct && (
+                                        <Button
+                                            size="lg"
+                                            onClick={() => setShowVideoModal(true)}
+                                            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
+                                        >
+                                            Video Produk
+                                        </Button>
+                                    )}
+                                    <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
+                                        <Button size="lg" className="w-full">
+                                            Hubungi Penjual
+                                        </Button>
+                                    </a>
+                                </div>
+                                <div className="mb-4">
+                                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{product.nameProduct}</h3>
+                                    {product.isDiscount && product.priceDiscount !== null ? (
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-lg text-red-600 line-through">
+                                                    {formatCurrency(product.price)}
+                                                </span>
+                                                {product.discountPercentage && (
+                                                    <span className="me-2 rounded bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">
+                                                        {product.discountPercentage}% OFF
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p className="text-4xl font-extrabold text-gray-900">
+                                                {formatCurrency(product.priceDiscount)}
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <p className="text-4xl font-extrabold text-gray-900">
+                                            {formatCurrency(product.price)}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         </div>
                         <div className="mt-6 space-y-4 text-sm">
+                            <div>
+                                <h3 className="font-semibold text-gray-700 text-lg mb-1">Brand</h3>
+                                <p className="text-gray-800 bg-gray-50 p-3 rounded-md whitespace-pre-wrap">{product.brandProduct || '-'}</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-gray-700 text-lg mb-1">Type</h3>
+                                <p className="text-gray-800 bg-gray-50 p-3 rounded-md whitespace-pre-wrap">{product.typeProduct || '-'}</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-gray-700 text-lg mb-1">Completeness</h3>
+                                <p className="text-gray-800 bg-gray-50 p-3 rounded-md whitespace-pre-wrap">{product.completenessProduct || '-'}</p>
+                            </div>
                             <div>
                                 <h3 className="font-semibold text-gray-700 text-lg mb-1">Description</h3>
                                 <p className="text-gray-800 bg-gray-50 p-3 rounded-md whitespace-pre-wrap">{product.detailProduct || '-'}</p>
@@ -154,7 +156,6 @@ export default function ProductDetail({ product, isFavorited }: { product: Produ
                                 <h3 className="font-semibold text-gray-700 text-lg mb-1">Disability/Minus</h3>
                                 <p className="text-gray-800 bg-gray-50 p-3 rounded-md whitespace-pre-wrap">{product.disability || '-'}</p>
                             </div>
-                            {/* Bagian video langsung dihapus dari sini */}
                         </div>
                         <div className="flex justify-end mt-6">
                             <a href="/catalog">
@@ -164,7 +165,6 @@ export default function ProductDetail({ product, isFavorited }: { product: Produ
                     </div>
                 </main>
 
-                {/* Video Modal */}
                 {showVideoModal && videoEmbedUrl && (
                     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
                         <div className="bg-white rounded-lg p-4 w-full max-w-3xl aspect-video relative">
@@ -181,7 +181,7 @@ export default function ProductDetail({ product, isFavorited }: { product: Produ
                                 src={videoEmbedUrl}
                                 title={`${product.nameProduct} Video`}
                                 frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" // Tambahkan web-share
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowFullScreen
                                 className="w-full h-full rounded-lg"
                             ></iframe>

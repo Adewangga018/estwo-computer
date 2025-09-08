@@ -19,7 +19,7 @@ interface FilterSidebarProps {
 
 export default function FilterSidebar({ data, setData, submit, reset, processing }: FilterSidebarProps) {
     return (
-        <Card className="rounded-lg shadow-lg">
+        <Card className="rounded-lg shadow-lg py-2">
             <CardHeader>
                 <CardTitle className="text-2xl font-bold">Filter</CardTitle>
             </CardHeader>

@@ -17,13 +17,17 @@ class HomeController extends Controller
                                   ->get();
 
         // Mengambil 2 produk terbaru berdasarkan tanggal pembuatan
-        $newestProducts = Product::latest() // latest() otomatis mengurutkan berdasarkan created_at (DESC)
+        $newestProducts = Product::latest()
                                  ->limit(2)
                                  ->get();
+
+        // Mengambil semua produk untuk bagian Flash Sale
+        $products = Product::latest()->get();
 
         return Inertia::render('Home', [
             'popularProducts' => $popularProducts,
             'newestProducts' => $newestProducts,
+            'products' => $products, // <-- TAMBAHKAN PROPS INI
         ]);
     }
 }

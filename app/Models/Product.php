@@ -1,10 +1,10 @@
 <?php
-// app/Models/Product.php
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Product extends Model
 {
@@ -22,8 +22,8 @@ class Product extends Model
         'detailProduct',
         'brandProduct',
         'price',
-        'isDiscount', // <-- INI PENTING
-        'discountPercentage', // <-- INI PENTING
+        'isDiscount',
+        'discountPercentage',
         'grade',
         'completenessProduct',
         'specs',
@@ -33,32 +33,38 @@ class Product extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    // Pastikan menggunakan snake_case sesuai nama accessor
+    protected $appends = ['priceDiscount'];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @return array<string, string>
      */
     protected function casts(): array
     {
-        // FUNGSI INI PENTING UNTUK MENGUBAH TIPE DATA
         return [
-            'price' => 'float',
             'isDiscount' => 'boolean',
-            'discountPercentage' => 'integer',
+            'specs' => 'array',
+            'disability' => 'array',
         ];
     }
 
     /**
-     * Accessor untuk menghitung harga diskon secara otomatis.
+     * Accessor untuk menghitung harga diskon (priceDiscount).
+     * Nama fungsi ini akan dikonversi menjadi 'priceDiscount' di JSON.
      *
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function priceDiscount(): Attribute
+    public function getPriceDiscountAttribute(): ?float
     {
-        // FUNGSI INI PENTING UNTUK MENGHITUNG HARGA DISKON
-        return new Attribute(
-            get: fn () => $this->isDiscount && $this->discountPercentage > 0
-                ? $this->price - ($this->price * $this->discountPercentage / 100)
-                : $this->price,
-        );
+        if ($this->isDiscount && $this->discountPercentage > 0) {
+            return $this->price - ($this->price * $this->discountPercentage / 100);
+        }
+        return null; // Kembalikan null jika tidak ada diskon
     }
 }

@@ -72,7 +72,8 @@ class Kernel extends HttpKernel
         // INI BARIS YANG KITA TAMBAHKAN
         'admin' => \App\Http\Middleware\IsAdmin::class,
     ];
-}<?php
+}
+<?php
 
 namespace App\Http;
 

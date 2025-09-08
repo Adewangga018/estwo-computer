@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, X, BoltIcon } from 'lucide-react';
+import { ArrowLeft, X,} from 'lucide-react';
 import GuestLayout from '@/Layouts/GuestLayout';
 
 ProductsMonitoring.layout = (page: React.ReactNode) => <GuestLayout children={page} />;
@@ -59,7 +59,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
         price: 0,
         isDiscount: false,
         discountPercentage: 0,
-        grade: 'A',
+        grade: '',
         completenessProduct: 'Satu set',
         specs: '',
         disability: '',
@@ -184,28 +184,14 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
         </div>
     );
 
-    const DetailRow = ({ label, value }: { label: string, value: string | number | null }) => (
-        <div className="grid grid-cols-3 gap-4 border-b py-2">
-            <dt className="font-semibold text-gray-600">{label}</dt>
-            <dd className="col-span-2 text-gray-800">{value || '-'}</dd>
-        </div>
-    );
-
-    // Fungsi untuk mendapatkan URL embed dari berbagai platform
     const getEmbedUrl = (url: string | null): string | null => {
         if (!url) return null;
-        // YouTube
         const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         const youtubeMatch = url.match(youtubeRegExp);
         if (youtubeMatch && youtubeMatch[2].length === 11) {
             return `https://www.youtube.com/embed/${youtubeMatch[2]}`;
         }
-        // Instagram
-        if (url.includes('instagram.com/reel/') || url.includes('instagram.com/p/')) {
-            return url + '/embed';
-        }
-        // TikTok & platform lain
-        return url;
+        return null; // Return null jika bukan link YouTube
     };
 
     const videoEmbedUrl = getEmbedUrl(selectedProduct?.linkProduct || null);
@@ -271,8 +257,8 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                {/* Menampilkan harga setelah diskon jika ada */}
-                                                {product.isDiscount && product.discountPercentage ? (
+                                                {/* Gunakan 'priceDiscount' dan cek null */}
+                                                {product.priceDiscount !== null ? (
                                                     <span className="font-semibold text-green-700">
                                                         {formatCurrency(product.priceDiscount)}
                                                     </span>
@@ -282,7 +268,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex gap-2 justify-center">
-                                                    <Button className="bg-gray-500 hover:bg-gray-600 text-white" size="sm" onClick={() => handleDetail(product)}>Detail</Button>
+                                                    <Button className="bg-gray-600 hover:bg-gray-800 text-white" size="sm" onClick={() => handleDetail(product)}>Detail</Button>
                                                     <Button className="bg-yellow-500 hover:bg-yellow-600 text-white" size="sm" onClick={() => handleEdit(product)}>Edit</Button>
                                                     <Button variant="destructive" size="sm" onClick={() => handleDelete(product)}>Delete</Button>
                                                 </div>
@@ -321,17 +307,9 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                             }
                                         </div>
                                         <div className="md:w-2/3">
-                                            <dl className="text-sm">
-                                                <DetailRow label="Product ID" value={selectedProduct.idProduct} />
-                                                <DetailRow label="Product Name" value={selectedProduct.nameProduct} />
-                                                <DetailRow label="Brand" value={selectedProduct.brandProduct} />
-                                                <DetailRow label="Type" value={selectedProduct.typeProduct} />
-                                                <DetailRow label="Price" value={`Rp ${Number(selectedProduct.price).toLocaleString('id-ID')}`} />
-                                                <DetailRow label="Grade" value={selectedProduct.grade} />
-                                                <DetailRow label="Completeness" value={selectedProduct.completenessProduct} />
-                                            </dl>
-                                            {videoEmbedUrl && (
-                                                <div className="mt-4">
+                                            <div className="mb-4">
+                                                {videoEmbedUrl && (
+                                                <div className="mb-4">
                                                     <Button
                                                         className="w-full bg-yellow-500 hover:bg-yellow-600 text-white"
                                                         onClick={() => setShowVideoModal(true)}
@@ -339,10 +317,37 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                                         Video Produk
                                                     </Button>
                                                 </div>
-                                            )}
+                                                )}
+                                                <h3 className="text-2xl font-bold text-gray-800 mb-2">{selectedProduct.nameProduct}</h3>
+                                                {selectedProduct.isDiscount && selectedProduct.priceDiscount !== null ? (
+                                                    <div className="space-y-1">
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-md text-red-600 line-through">
+                                                                {formatCurrency(selectedProduct.price)}
+                                                            </span>
+                                                            {selectedProduct.discountPercentage && (
+                                                                <span className="me-2 rounded bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">
+                                                                    {selectedProduct.discountPercentage}% OFF
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-3xl font-extrabold text-gray-900">
+                                                            {formatCurrency(selectedProduct.priceDiscount)}
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-3xl font-extrabold text-gray-900">
+                                                        {formatCurrency(selectedProduct.price)}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="mt-4 space-y-2 text-sm">
+                                        <div><h3 className="font-semibold text-gray-600">Brand</h3><p className="text-gray-800 bg-gray-50 p-2 rounded break-all">{selectedProduct.brandProduct || '-'}</p></div>
+                                        <div><h3 className="font-semibold text-gray-600">Type</h3><p className="text-gray-800 bg-gray-50 p-2 rounded break-all">{selectedProduct.typeProduct || '-'}</p></div>
+                                        <div><h3 className="font-semibold text-gray-600">Grade</h3><p className="text-gray-800 bg-gray-50 p-2 rounded break-all">{selectedProduct.grade || '-'}</p></div>
+                                        <div><h3 className="font-semibold text-gray-600">Completeness</h3><p className="text-gray-800 bg-gray-50 p-2 rounded break-all">{selectedProduct.completenessProduct || '-'}</p></div>
                                         <div><h3 className="font-semibold text-gray-600">Product Link</h3><p className="text-gray-800 bg-gray-50 p-2 rounded break-all">{selectedProduct.linkProduct || '-'}</p></div>
                                         <div><h3 className="font-semibold text-gray-600">Description</h3><p className="text-gray-800 bg-gray-50 p-2 rounded">{selectedProduct.detailProduct || '-'}</p></div>
                                         <div><h3 className="font-semibold text-gray-600">Specifications</h3><p className="text-gray-800 bg-gray-50 p-2 rounded">{selectedProduct.specs || '-'}</p></div>
