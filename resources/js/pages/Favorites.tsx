@@ -10,7 +10,7 @@ const ProductCard = ({ product }: { product: Product }) => (
     <div className="w-[150px] sm:w-full flex-shrink-0">
         <Card className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <CardHeader className="relative p-0">
-                <div className="aspect-square w-full bg-gray-200">
+                <div className="aspect-square w-full bg-gray-200 overflow-hidden">
                     {product.photo ? (
                         <img
                             src={`/storage/${product.photo}`}

@@ -1,7 +1,7 @@
 import { Link, usePage, router } from '@inertiajs/react'; // 1. Impor 'router'
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Heart, User, ShoppingCart } from 'lucide-react';
+import { Search, Heart, User } from 'lucide-react';
 import { useState } from 'react';
 import {
     Dialog,
@@ -139,7 +139,7 @@ export default function SiteHeader() {
                             <Link href="/" className="hover:text-yellow-600">Home</Link>
                             <Link href="/catalog" className="hover:text-yellow-600">Catalog</Link>
                             <a
-                                href="https://docs.google.com/forms/d/e/1FAIpQLSeRDklJV6ambiGI1PGMr4wyWonFNvIney-R_TxzRFFJQC8x6Q/viewform"
+                                href="https://docs.google.com/forms/d/e/1FAIpQLSeRDklJV6ambiGI1PGMr4wyWonFNvIney-R_TxzRFFJQC8x6Q/viewform "
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:text-yellow-600"

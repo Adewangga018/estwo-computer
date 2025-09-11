@@ -12,7 +12,7 @@ const ProductCard = ({ product }: { product: Product }) => (
     <div className="w-[150px] sm:w-full flex-shrink-0">
         <Card className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <CardHeader className="relative p-0">
-                <div className="aspect-square w-full bg-gray-200">
+                <div className="aspect-square w-full bg-gray-200 overflow-hidden">
                     {product.photo ? (
                         <img
                             src={`/storage/${product.photo}`}
@@ -105,7 +105,7 @@ export default function Home({ popularProducts, newestProducts, products }: { po
 
                 <main className="container mx-auto p-4">
                     {/* SECTION DISKON NGAMUK */}
-                    <section className="mb-8 rounded-lg bg-gradient-to-r from-red-600 to-yellow-500 p-6 text-white shadow-lg">
+                    <section className="mb-4 rounded-lg bg-gradient-to-r from-red-600 to-yellow-500 p-6 text-white shadow-lg">
                         {/* Wrapper untuk Desktop */}
                         <div className="hidden md:flex flex-col md:flex-row items-center justify-center gap-6">
                              {/* Kolom Kiri: Narasi */}
@@ -159,6 +159,17 @@ export default function Home({ popularProducts, newestProducts, products }: { po
                             </Link>
                         </div>
                     </section>
+                    {/* SECTION SOP PEMESANAN */}
+                    <div className="max-w-full mx-auto mb-4">
+                        <section className="rounded-3xl shadow-lg overflow-hidden">
+                            {/* Gambar akan menyesuaikan dengan lebar wrapper */}
+                            <img
+                                src="/images/sop-pemesanan.jpg"
+                                alt="SOP Pemesanan Estwo Computer"
+                                className="w-full h-auto" // h-auto menjaga rasio aspek gambar
+                            />
+                        </section>
+                    </div>
 
                     {/* Section Produk Populer & Terbaru */}
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">

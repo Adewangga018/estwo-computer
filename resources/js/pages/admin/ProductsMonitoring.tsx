@@ -300,9 +300,9 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                 <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                                     <h2 className="text-2xl font-bold mb-4 border-b pb-2">Product Detail</h2>
                                     <div className="flex flex-col md:flex-row gap-6">
-                                        <div className="md:w-1/3">
+                                        <div className="md:w-1/3 aspect-square overflow-hidden">
                                             {selectedProduct.photo ?
-                                                <img src={`/storage/${selectedProduct.photo}`} alt={selectedProduct.nameProduct} className="w-full h-auto object-cover rounded-lg shadow-md" /> :
+                                                <img src={`/storage/${selectedProduct.photo}`} alt={selectedProduct.nameProduct} className="w-full h-full object-cover object-center rounded-lg shadow-md" /> :
                                                 <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">No Photo</div>
                                             }
                                         </div>

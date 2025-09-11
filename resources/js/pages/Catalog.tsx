@@ -14,12 +14,12 @@ const ProductCard = ({ product }: { product: Product }) => (
     <div className="w-[150px] sm:w-full flex-shrink-0">
         <Card className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <CardHeader className="relative p-0">
-                <div className="aspect-square w-full bg-gray-200">
+                <div className="aspect-square w-full bg-gray-200 overflow-hidden">
                     {product.photo ? (
                         <img
                             src={`/storage/${product.photo}`}
                             alt={product.nameProduct}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-cover object-center"
                         />
                     ) : (
                         <div className="flex h-full w-full items-center justify-center text-gray-500">
@@ -113,7 +113,7 @@ export default function Catalog({ products, filters }: { products: Product[], fi
                     <div className="lg:hidden">
                             <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                                 <SheetTrigger asChild>
-                                    <Button variant="outline" className="m-5">
+                                    <Button variant="outline" className="m-5w">
                                         <Filter className="mr-2 h-4 w-4" />
                                         Filter
                                     </Button>
