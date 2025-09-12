@@ -1,0 +1,60 @@
+# Development files
+.env.example
+.env.local
+.env.testing
+.gitignore
+.gitattributes
+README.md
+.editorconfig
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Testing
+tests/
+phpunit.xml
+.phpunit.result.cache
+
+# Development dependencies
+package-lock.json
+composer.lock
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts (keep the built assets)
+# public/build/ - Keep this for production
+
+# Logs
+*.log
+storage/logs/*.log
+
+# Cache directories (will be recreated)
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*.php
+
+# Temporary files
+*.tmp
+*.temp
+
+# Development tools
+.github/
+eslint.config.js
+tsconfig.json
+vite.config.ts
+components.json
+
+# Archive files
+*.tar.gz
+*.zip
