@@ -8,9 +8,13 @@ import { formatCurrency } from '@/lib/utils';
 import { Product } from '@/types/global';
 
 const ProductCard = ({ product }: { product: Product }) => (
-    // Untuk mobile, kartu akan memiliki lebar tetap agar bisa di-scroll
-    <div className="w-[150px] sm:w-full flex-shrink-0">
-        <Card className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">
+    <Link
+        href={route('catalog.show', product.idProduct)}
+        className="w-[150px] sm:w-full flex-shrink-0 group block"
+    >
+        <Card
+            className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-105"
+        >
             <CardHeader className="relative p-0">
                 <div className="aspect-square w-full bg-gray-200 overflow-hidden">
                     {product.photo ? (
@@ -66,14 +70,9 @@ const ProductCard = ({ product }: { product: Product }) => (
                         )}
                     </div>
                 </div>
-                <Link href={route('catalog.show', product.idProduct)} className="w-full">
-                    <Button className="w-full h-8 text-xs bg-yellow-500 text-white hover:bg-yellow-600">
-                        Details
-                    </Button>
-                </Link>
             </CardFooter>
         </Card>
-    </div>
+    </Link>
 );
 
 
@@ -105,7 +104,7 @@ export default function Home({ popularProducts, newestProducts, products }: { po
 
                 <main className="container mx-auto p-4">
                     {/* SECTION DISKON NGAMUK */}
-                    <section className="mb-4 rounded-lg bg-gradient-to-r from-red-600 to-yellow-500 p-6 text-white shadow-lg">
+                    <section className="mb-4 rounded-lg bg-gradient-to-r from-red-600 to-yellow-500 p-6 py-3 text-white shadow-lg">
                         {/* Wrapper untuk Desktop */}
                         <div className="hidden md:flex flex-col md:flex-row items-center justify-center gap-6">
                              {/* Kolom Kiri: Narasi */}
@@ -139,7 +138,7 @@ export default function Home({ popularProducts, newestProducts, products }: { po
                         {/* Wrapper untuk Mobile dengan Horizontal Scroll */}
                         <div className="md:hidden">
                             <div className="flex flex-col items-center text-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className=" h-20 w-20 text-yellow-300 drop-shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-20 w-20 text-yellow-300 drop-shadow-lg">
                                     <path fillRule="evenodd" d="M14.615 1.585a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l2.965-7.19H4.5a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z" clipRule="evenodd" />
                                 </svg>
                                 <h2 className="text-3xl font-bold drop-shadow-md">DISKON NGAMUK!</h2>

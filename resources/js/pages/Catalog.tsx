@@ -10,16 +10,20 @@ import { Product } from '@/types/global';
 
 // Komponen kartu produk yang bisa digunakan kembali
 const ProductCard = ({ product }: { product: Product }) => (
-    // Untuk mobile, kartu akan memiliki lebar tetap agar bisa di-scroll
-    <div className="w-[150px] sm:w-full flex-shrink-0">
-        <Card className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">
+    <Link
+        href={route('catalog.show', product.idProduct)}
+        className="w-[150px] sm:w-full flex-shrink-0 group block"
+    >
+        <Card
+            className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-105"
+        >
             <CardHeader className="relative p-0">
                 <div className="aspect-square w-full bg-gray-200 overflow-hidden">
                     {product.photo ? (
                         <img
                             src={`/storage/${product.photo}`}
                             alt={product.nameProduct}
-                            className="h-full w-full object-cover object-center"
+                            className="h-full w-full object-cover"
                         />
                     ) : (
                         <div className="flex h-full w-full items-center justify-center text-gray-500">
@@ -68,14 +72,9 @@ const ProductCard = ({ product }: { product: Product }) => (
                         )}
                     </div>
                 </div>
-                <Link href={route('catalog.show', product.idProduct)} className="w-full">
-                    <Button className="w-full h-8 text-xs bg-yellow-500 text-white hover:bg-yellow-600">
-                        Details
-                    </Button>
-                </Link>
             </CardFooter>
         </Card>
-    </div>
+    </Link>
 );
 
 export default function Catalog({ products, filters }: { products: Product[], filters: Record<string, string> }) {

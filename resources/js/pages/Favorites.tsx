@@ -1,14 +1,17 @@
 import { Head, Link } from '@inertiajs/react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils';
 import { Product } from '@/types/global';
 
 // Komponen kartu produk
 const ProductCard = ({ product }: { product: Product }) => (
-    // Untuk mobile, kartu akan memiliki lebar tetap agar bisa di-scroll
-    <div className="w-[150px] sm:w-full flex-shrink-0">
-        <Card className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">
+    <Link
+        href={route('catalog.show', product.idProduct)}
+        className="w-[150px] sm:w-full flex-shrink-0 group block"
+    >
+        <Card
+            className="flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-105"
+        >
             <CardHeader className="relative p-0">
                 <div className="aspect-square w-full bg-gray-200 overflow-hidden">
                     {product.photo ? (
@@ -64,14 +67,9 @@ const ProductCard = ({ product }: { product: Product }) => (
                         )}
                     </div>
                 </div>
-                <Link href={route('catalog.show', product.idProduct)} className="w-full">
-                    <Button className="w-full h-8 text-xs bg-yellow-500 text-white hover:bg-yellow-600">
-                        Details
-                    </Button>
-                </Link>
             </CardFooter>
         </Card>
-    </div>
+    </Link>
 );
 
 // Halaman Favorit utama
