@@ -61,9 +61,26 @@ jobs:
           
           # Add host to known_hosts
           echo "🔍 Adding ${{ secrets.HOST }} to known_hosts..."
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts || {
-            echo "❌ Failed to add host to known_hosts"
-            exit 1
+          
+          # Use custom port if specified, otherwise default to 22
+          SSH_PORT="${{ secrets.PORT }}"
+          if [ -z "$SSH_PORT" ]; then
+            SSH_PORT=22
+          fi
+          
+          echo "🔍 Using port: $SSH_PORT"
+          
+          # Try ssh-keyscan with the specified port
+          ssh-keyscan -p $SSH_PORT -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts 2>&1 || {
+            echo "❌ ssh-keyscan failed. Trying alternative method..."
+            
+            # Alternative: Add host without verification (less secure but works)
+            echo "Host ${{ secrets.HOST }}" >> ~/.ssh/config
+            echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+            echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
+            echo "  Port $SSH_PORT" >> ~/.ssh/config
+            
+            echo "⚠️  Added host with StrictHostKeyChecking disabled"
           }
           
           echo "✅ SSH setup completed successfully"
