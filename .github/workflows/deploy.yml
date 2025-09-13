@@ -50,14 +50,14 @@ jobs:
             --exclude='storage/framework/sessions/*' \
             --exclude='storage/framework/views/*' \
             --exclude='bootstrap/cache/*' \
-            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }}" \
             ./ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.DEPLOY_PATH }}/
 
           echo "🚀 Files synced successfully!"
 
       - name: Clear Laravel optimized caches
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
             cd ${{ secrets.DEPLOY_PATH }}
             php artisan optimize:clear
             echo "✅ Laravel caches cleared!"
@@ -65,7 +65,7 @@ jobs:
 
       - name: Copy frontend build to public directory
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
             cd ${{ secrets.DEPLOY_PATH }}
             cp -r public/build/* ../public_html/build/
             echo "✅ Frontend build copied to public directory!"
