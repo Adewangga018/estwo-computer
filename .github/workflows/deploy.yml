@@ -4,9 +4,6 @@ on:
   release:
     types: [published]
 
-env:
-  NODE_VERSION: '22'
-
 jobs:
   deploy:
     name: Deploy to Production
@@ -104,6 +101,14 @@ jobs:
             ./ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.DEPLOY_PATH }}/
 
           echo "🚀 Files synced successfully!"
+
+      - name: Reinstall composer dependencies
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+            cd ${{ secrets.DEPLOY_PATH }}
+            composer install --no-dev --optimize-autoloader
+            echo "✅ Composer dependencies reinstalled!"
+          EOF
 
       - name: Clear Laravel optimized caches
         run: |
