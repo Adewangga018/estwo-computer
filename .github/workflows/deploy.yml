@@ -67,7 +67,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
             cd ${{ secrets.DEPLOY_PATH }}
-            cp -r public/build/* ../public_html/
+            cp -r public/build/* ../public_html/build/
             echo "✅ Frontend build copied to public directory!"
           EOF
 
