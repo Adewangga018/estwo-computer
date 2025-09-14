@@ -9,7 +9,7 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     environment: production
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,53 +33,53 @@ jobs:
             echo "❌ SSH_PRIVATE_KEY secret is empty!"
             exit 1
           fi
-          
+
           if [ -z "${{ secrets.HOST }}" ]; then
             echo "❌ HOST secret is empty!"
             exit 1
           fi
-          
+
           echo "✅ Secrets are available"
-          
+
           # Create SSH directory
           mkdir -p ~/.ssh
-          
+
           # Write SSH private key
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          
+
           # Verify the key was written correctly
           if [ ! -s ~/.ssh/id_rsa ]; then
             echo "❌ SSH private key file is empty!"
             exit 1
           fi
-          
+
           echo "✅ SSH private key written successfully"
-          
+
           # Add host to known_hosts
           echo "🔍 Adding ${{ secrets.HOST }} to known_hosts..."
-          
+
           # Use custom port if specified, otherwise default to 22
           SSH_PORT="${{ secrets.PORT }}"
           if [ -z "$SSH_PORT" ]; then
             SSH_PORT=22
           fi
-          
+
           echo "🔍 Using port: $SSH_PORT"
-          
+
           # Try ssh-keyscan with the specified port
           ssh-keyscan -p $SSH_PORT -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts 2>&1 || {
             echo "❌ ssh-keyscan failed. Trying alternative method..."
-            
+
             # Alternative: Add host without verification (less secure but works)
             echo "Host ${{ secrets.HOST }}" >> ~/.ssh/config
             echo "  StrictHostKeyChecking no" >> ~/.ssh/config
             echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
             echo "  Port $SSH_PORT" >> ~/.ssh/config
-            
+
             echo "⚠️  Added host with StrictHostKeyChecking disabled"
           }
-          
+
           echo "✅ SSH setup completed successfully"
 
       - name: Deploy to server via rsync
@@ -123,6 +123,7 @@ jobs:
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
             cd ${{ secrets.DEPLOY_PATH }}
             cp -r public/build/* ../public_html/build/
+            cp -r public/images/* ../public_html/images/
             echo "✅ Frontend build copied to public directory!"
           EOF
 
