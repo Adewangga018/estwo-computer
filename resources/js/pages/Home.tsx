@@ -7,6 +7,7 @@ import { X } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { Product } from '@/types/global';
 
+// Component untuk menampilkan kartu produk
 const ProductCard = ({ product }: { product: Product }) => (
     <Link
         href={route('catalog.show', product.idProduct)}

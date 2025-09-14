@@ -4,13 +4,11 @@ on:
   release:
     types: [published]
 
-env:
-  NODE_VERSION: '22'
-
 jobs:
   deploy:
     name: Deploy to Production
     runs-on: ubuntu-latest
+    environment: production
     
     steps:
       - name: Checkout code
@@ -30,10 +28,59 @@ jobs:
 
       - name: Setup SSH
         run: |
+          # Debug: Check if secrets are available
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
+            echo "❌ SSH_PRIVATE_KEY secret is empty!"
+            exit 1
+          fi
+          
+          if [ -z "${{ secrets.HOST }}" ]; then
+            echo "❌ HOST secret is empty!"
+            exit 1
+          fi
+          
+          echo "✅ Secrets are available"
+          
+          # Create SSH directory
           mkdir -p ~/.ssh
+          
+          # Write SSH private key
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          
+          # Verify the key was written correctly
+          if [ ! -s ~/.ssh/id_rsa ]; then
+            echo "❌ SSH private key file is empty!"
+            exit 1
+          fi
+          
+          echo "✅ SSH private key written successfully"
+          
+          # Add host to known_hosts
+          echo "🔍 Adding ${{ secrets.HOST }} to known_hosts..."
+          
+          # Use custom port if specified, otherwise default to 22
+          SSH_PORT="${{ secrets.PORT }}"
+          if [ -z "$SSH_PORT" ]; then
+            SSH_PORT=22
+          fi
+          
+          echo "🔍 Using port: $SSH_PORT"
+          
+          # Try ssh-keyscan with the specified port
+          ssh-keyscan -p $SSH_PORT -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts 2>&1 || {
+            echo "❌ ssh-keyscan failed. Trying alternative method..."
+            
+            # Alternative: Add host without verification (less secure but works)
+            echo "Host ${{ secrets.HOST }}" >> ~/.ssh/config
+            echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+            echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
+            echo "  Port $SSH_PORT" >> ~/.ssh/config
+            
+            echo "⚠️  Added host with StrictHostKeyChecking disabled"
+          }
+          
+          echo "✅ SSH setup completed successfully"
 
       - name: Deploy to server via rsync
         run: |
@@ -50,14 +97,22 @@ jobs:
             --exclude='storage/framework/sessions/*' \
             --exclude='storage/framework/views/*' \
             --exclude='bootstrap/cache/*' \
-            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }}" \
             ./ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.DEPLOY_PATH }}/
 
           echo "🚀 Files synced successfully!"
 
+      - name: Reinstall composer dependencies
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+            cd ${{ secrets.DEPLOY_PATH }}
+            composer install --no-dev --optimize-autoloader
+            echo "✅ Composer dependencies reinstalled!"
+          EOF
+
       - name: Clear Laravel optimized caches
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
             cd ${{ secrets.DEPLOY_PATH }}
             php artisan optimize:clear
             echo "✅ Laravel caches cleared!"
@@ -65,9 +120,9 @@ jobs:
 
       - name: Copy frontend build to public directory
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
             cd ${{ secrets.DEPLOY_PATH }}
-            cp -r public/build/* ../public_html/
+            cp -r public/build/* ../public_html/build/
             echo "✅ Frontend build copied to public directory!"
           EOF
 
