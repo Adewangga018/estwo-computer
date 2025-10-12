@@ -1,5 +1,5 @@
-import { Instagram, Phone, MapPin, Send } from 'lucide-react';
-import { TikTokIcon } from './ui/icon'; // Asumsi Anda memiliki atau akan membuat komponen ikon TikTok
+import { Instagram, Phone, MapPin } from 'lucide-react';
+import { TikTokIcon } from './ui/icon';
 
 export default function SiteFooter() {
     return (

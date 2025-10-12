@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GuestLayout from '@/Layouts/GuestLayout';
+import { Star } from 'lucide-react';
 import React from 'react';
 
 AdminScreen.layout = (page: React.ReactNode) => <GuestLayout children={page} />;
@@ -19,6 +20,13 @@ export default function AdminScreen() {
                         <Link href={route('admin.products.index')}>
                             <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white" size="lg">
                                 Products Monitoring
+                            </Button>
+                        </Link>
+                        <Link href={route('admin.testimonials.index')}>
+                            <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white" size="lg">
+                                <CardTitle className="flex items-center gap-2">
+                                    <Star /> Rating Monitoring
+                                </CardTitle>
                             </Button>
                         </Link>
                          <Link href="/">
