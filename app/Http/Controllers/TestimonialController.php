@@ -91,7 +91,7 @@ class TestimonialController extends Controller
     public function publicIndex()
     {
         $testimonials = Testimonial::orderBy('created_at', 'desc')->get();
-        return Inertia::render('Testimonials', [
+        return Inertia::render('Review', [
             'testimonials' => $testimonials,
         ]);
     }

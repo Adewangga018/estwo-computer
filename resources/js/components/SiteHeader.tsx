@@ -146,7 +146,7 @@ export default function SiteHeader() {
                             >
                                 Service
                             </a>
-                            <Link href={route('testimonials.public.index')} className="hover:text-yellow-600">Testimonials</Link>
+                            <Link href="/review" className="hover:text-yellow-600">Review</Link>
                             <Link href="/faq" className="hover:text-yellow-600">FAQ</Link>
                         </div>
                     </div>

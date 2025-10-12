@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\ReviewController;
 use Inertia\Inertia;
 
 // Rute Publik
@@ -15,6 +16,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/catalog/{product}', [CatalogController::class, 'show'])->name('catalog.show');
 Route::get('/testimonials', [TestimonialController::class, 'publicIndex'])->name('testimonials.public.index');
+Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
+
 
 // Rute yang memerlukan autentikasi
 Route::middleware('auth')->group(function () {
