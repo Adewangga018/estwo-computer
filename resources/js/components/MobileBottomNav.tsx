@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Home, LayoutGrid, Wrench, Heart, User } from 'lucide-react';
+import { Home, LayoutGrid, Star, Heart, User } from 'lucide-react';
 import { useState } from 'react'; // 1. Impor useState
 import {
     Dialog,
@@ -20,7 +20,7 @@ export default function MobileBottomNav() {
     const navItems = [
         { href: '/', label: 'Home', icon: Home },
         { href: '/catalog', label: 'Catalog', icon: LayoutGrid },
-        { href: 'https://wa.me/6285194574812', label: 'Service', icon: Wrench, external: true },
+        { href: '/review', label: 'Review', icon: Star, external: false },
         // { href: '/favorites', label: 'Favorite', icon: Heart },
         // // Kita akan tangani 'Account' secara terpisah
     ];

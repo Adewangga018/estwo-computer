@@ -138,16 +138,7 @@ export default function SiteHeader() {
                         <div className="flex items-center space-x-8 text-lg">
                             <Link href="/" className="hover:text-yellow-600">Home</Link>
                             <Link href="/catalog" className="hover:text-yellow-600">Catalog</Link>
-                            <a
-                                href="https://docs.google.com/forms/d/e/1FAIpQLSeRDklJV6ambiGI1PGMr4wyWonFNvIney-R_TxzRFFJQC8x6Q/viewform "
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:text-yellow-600"
-                            >
-                                Service
-                            </a>
                             <Link href="/review" className="hover:text-yellow-600">Review</Link>
-                            <Link href="/faq" className="hover:text-yellow-600">FAQ</Link>
                         </div>
                     </div>
                 </nav>
