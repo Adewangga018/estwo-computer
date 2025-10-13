@@ -61,7 +61,7 @@ export default function SiteFooter() {
                         {/* Media sosial dipindah ke sini */}
                         <h3 className="text-xl font-semibold mb-2">Ikuti Kami</h3>
                         <div className="flex space-x-4">
-                            <a href="https://www.instagram.com/estwocomputer.id?igsh=MXV2NnNwYTJrbDZmcg==" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-yellow-500">
+                            <a href="https://www.instagram.com/laptopsurabayakota?igsh=MWpqbDVxejhiMjA4aQ==" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-yellow-500">
                                 <Instagram size={28} />
                             </a>
                             <a href="https://www.tiktok.com/@estwocomputer.id?_t=ZS-8z59O8idMFE&_r=1" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-yellow-500">
