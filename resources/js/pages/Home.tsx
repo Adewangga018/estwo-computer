@@ -162,12 +162,9 @@ export default function Home({ popularProducts, newestProducts, products }: { po
                     {/* Section Why Us */}
                     <section className="py-12 bg-gray-50 text-center">
                         <div className="max-w-6xl mx-auto px-4">
-                            <h2 className="text-2xl md:text-3xl font-semibold mb-2">KENAPA HARUS</h2>
-                            <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                            Estwo Computer?
-                            </h3>
+                            <h2 className="text-2xl md:text-3xl font-semibold mb-2">Kenapa Harus Estwo Computer ???</h2>
                             <p className="text-gray-600 mb-10">
-                            Kami berkomitmen memberikan pengalaman terbaik untuk pembelian laptop bekas berkualitas.
+                            Kami berkomitmen memberikan pengalaman terbaik untuk pembelian laptop bekas berkualitas
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
