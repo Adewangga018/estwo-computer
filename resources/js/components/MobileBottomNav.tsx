@@ -1,54 +1,36 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Home, LayoutGrid, Star, Heart, User } from 'lucide-react';
-import { useState } from 'react'; // 1. Impor useState
+import { motion, AnimatePresence } from "framer-motion";
+import { Home, LayoutGrid, Star, Heart, User, Wrench, HelpCircle, ClipboardCheck } from 'lucide-react';
+import { useState } from 'react';
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"; // 2. Impor komponen Dialog
+} from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 
 export default function MobileBottomNav() {
     const { url, props } = usePage();
     const auth = (props as any).auth;
 
-    // 3. Tambahkan state untuk mengontrol dialog
     const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+    const [isServiceOpen, setIsServiceOpen] = useState(false); // state drop-up service
 
     const navItems = [
         { href: '/', label: 'Home', icon: Home },
         { href: '/catalog', label: 'Catalog', icon: LayoutGrid },
-        { href: '/review', label: 'Review', icon: Star, external: false },
-        // { href: '/favorites', label: 'Favorite', icon: Heart },
-        // // Kita akan tangani 'Account' secara terpisah
     ];
 
     return (
         <>
             <div className="sm:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200">
-                <div className="grid h-full grid-cols-5 mx-auto font-medium">
+                <div className="grid h-full grid-cols-5 mx-auto font-medium relative">
+
+                    {/* Tombol navigasi utama */}
                     {navItems.map((item) => {
                         const Icon = item.icon;
-
-                        // Jika ini adalah link eksternal (WhatsApp)
-                        if (item.external) {
-                            return (
-                                <a
-                                    key={item.label}
-                                    href={item.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex flex-col items-center justify-center px-5 text-gray-500 hover:bg-gray-50 group"
-                                >
-                                    <Icon className="w-6 h-6 mb-1 text-gray-500 group-hover:text-yellow-600" />
-                                    <span className="text-sm group-hover:text-yellow-600">{item.label}</span>
-                                </a>
-                            );
-                        }
-
-                        // Untuk link internal biasa
                         return (
                             <Link
                                 key={item.label}
@@ -65,9 +47,61 @@ export default function MobileBottomNav() {
                         );
                     })}
 
-                    {/* --- AWAL LOGIKA KHUSUS UNTUK TOMBOL ACCOUNT --- */}
+                    {/* Tombol Service dengan drop-up */}
+                    <div className="relative">
+                        <button
+                            onClick={() => setIsServiceOpen(!isServiceOpen)}
+                            className="inline-flex flex-col items-center justify-center w-full px-5 text-gray-500 hover:bg-gray-50 group focus:outline-none"
+                        >
+                            <Wrench className="w-6 h-6 mb-1 mt-2 text-gray-500 group-hover:text-yellow-600" />
+                            <span className="text-sm group-hover:text-yellow-600">Service</span>
+                        </button>
+
+                        {/* Drop-up menu */}
+                        <AnimatePresence>
+                            {isServiceOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 10 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="absolute bottom-16 left-1/2 -translate-x-1/2 bg-white border shadow-lg rounded-xl p-2 flex flex-col gap-2 w-40 z-50"
+                                >
+                                    {/* Warranty */}
+                                    <a
+                                        href="https://docs.google.com/forms/d/e/1FAIpQLSeRDklJV6ambiGI1PGMr4wyWonFNvIney-R_TxzRFFJQC8x6Q/viewform"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 text-gray-700 hover:text-yellow-600 text-sm p-2 rounded-md hover:bg-gray-50"
+                                    >
+                                        <ClipboardCheck size={16} />
+                                        Warranty
+                                    </a>
+
+                                    {/* FAQ */}
+                                    <Link
+                                        href="/faq"
+                                        className="flex items-center gap-2 text-gray-700 hover:text-yellow-600 text-sm p-2 rounded-md hover:bg-gray-50"
+                                    >
+                                        <HelpCircle size={16} />
+                                        FAQ
+                                    </Link>
+
+                                    {/* Review */}
+                                    <Link
+                                        href="/review"
+                                        className="flex items-center gap-2 text-gray-700 hover:text-yellow-600 text-sm p-2 rounded-md hover:bg-gray-50"
+                                    >
+                                        <Star size={16} />
+                                        Review
+                                    </Link>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Favorite */}
                     {auth.user ? (
-                        // Jika sudah login, arahkan ke /account
                         <Link
                             href="/favorites"
                             className={`inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group ${
@@ -75,12 +109,11 @@ export default function MobileBottomNav() {
                             }`}
                         >
                             <Heart className={`w-6 h-6 mb-1 ${
-                                url === '/account' ? 'text-yellow-800' : 'text-gray-500 group-hover:text-yellow-600'
+                                url === '/favorites' ? 'text-yellow-800' : 'text-gray-500 group-hover:text-yellow-600'
                             }`} />
                             <span className="text-sm group-hover:text-yellow-600">Favorite</span>
                         </Link>
                     ) : (
-                        // Jika belum login, buka dialog
                         <button
                             onClick={() => setIsAuthDialogOpen(true)}
                             className="inline-flex flex-col items-center justify-center px-5 text-gray-500 hover:bg-gray-50 group"
@@ -89,11 +122,9 @@ export default function MobileBottomNav() {
                             <span className="text-sm group-hover:text-yellow-600">Favorite</span>
                         </button>
                     )}
-                    {/* --- AKHIR LOGIKA KHUSUS UNTUK TOMBOL ACCOUNT --- */}
 
-                    {/* --- AWAL LOGIKA KHUSUS UNTUK TOMBOL ACCOUNT --- */}
+                    {/* Account */}
                     {auth.user ? (
-                        // Jika sudah login, arahkan ke /account
                         <Link
                             href="/account"
                             className={`inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group ${
@@ -106,7 +137,6 @@ export default function MobileBottomNav() {
                             <span className="text-sm group-hover:text-yellow-600">Account</span>
                         </Link>
                     ) : (
-                        // Jika belum login, buka dialog
                         <button
                             onClick={() => setIsAuthDialogOpen(true)}
                             className="inline-flex flex-col items-center justify-center px-5 text-gray-500 hover:bg-gray-50 group"
@@ -115,11 +145,10 @@ export default function MobileBottomNav() {
                             <span className="text-sm group-hover:text-yellow-600">Account</span>
                         </button>
                     )}
-                    {/* --- AKHIR LOGIKA KHUSUS UNTUK TOMBOL ACCOUNT --- */}
                 </div>
             </div>
 
-            {/* Komponen Dialog (Pop-up) */}
+            {/* Dialog login/daftar */}
             <Dialog open={isAuthDialogOpen} onOpenChange={setIsAuthDialogOpen}>
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>
@@ -128,7 +157,7 @@ export default function MobileBottomNav() {
                             Anda perlu masuk ke akun Anda untuk mengakses fitur ini. Silakan masuk atau daftar jika Anda belum punya akun.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="flex justify-end space-x-2 pt-4">
+                    <div className="flex justify-end space-x-2">
                         <Button variant="outline" asChild className="bg-gray-800 text-white">
                             <Link href="/register">Daftar</Link>
                         </Button>

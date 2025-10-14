@@ -39,25 +39,6 @@ export default function SiteFooter() {
 
                     {/* Kolom 3: Media Sosial */}
                     <div>
-                        <h3 className="text-xl font-semibold mb-2">Tautan Cepat</h3>
-                        <ul className="flex flex-row text-gray-400 space-x-8 mb-2"> {/* Menambah margin bawah */}
-                            <li>
-                                <a
-                                    href="https://docs.google.com/forms/d/e/1FAIpQLSeRDklJV6ambiGI1PGMr4wyWonFNvIney-R_TxzRFFJQC8x6Q/viewform"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="hover:text-yellow-600"
-                                >
-                                    Service
-                                </a>
-                            </li>
-                            <li>
-                                <Link href="/faq" className="hover:text-yellow-600">
-                                    FAQ
-                                </Link>
-                            </li>
-                        </ul>
-
                         {/* Media sosial dipindah ke sini */}
                         <h3 className="text-xl font-semibold mb-2">Ikuti Kami</h3>
                         <div className="flex space-x-4">

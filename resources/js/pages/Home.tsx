@@ -159,6 +159,50 @@ export default function Home({ popularProducts, newestProducts, products }: { po
                             </Link>
                         </div>
                     </section>
+                    {/* Section Why Us */}
+                    <section className="py-12 bg-gray-50 text-center">
+                        <div className="max-w-6xl mx-auto px-4">
+                            <h2 className="text-2xl md:text-3xl font-semibold mb-2">KENAPA HARUS</h2>
+                            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+                            Estwo Computer?
+                            </h3>
+                            <p className="text-gray-600 mb-10">
+                            Kami berkomitmen memberikan pengalaman terbaik untuk pembelian laptop bekas berkualitas.
+                            </p>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="bg-white shadow-md rounded-2xl p-6 text-left">
+                                <div className="flex items-center mb-3">
+                                <span className="text-blue-600 text-2xl mr-3">💰</span>
+                                <h4 className="font-bold text-lg">Harga Terjamin</h4>
+                                </div>
+                                <p className="text-gray-600">
+                                Dapatkan harga terbaik sesuai kondisi laptop tanpa mengorbankan kualitas.
+                                </p>
+                            </div>
+
+                            <div className="bg-white shadow-md rounded-2xl p-6 text-left">
+                                <div className="flex items-center mb-3">
+                                <span className="text-green-600 text-2xl mr-3">⚙️</span>
+                                <h4 className="font-bold text-lg">Kualitas Memadai</h4>
+                                </div>
+                                <p className="text-gray-600">
+                                Semua unit sudah melalui proses pengecekan hardware dan software secara menyeluruh.
+                                </p>
+                            </div>
+
+                            <div className="bg-white shadow-md rounded-2xl p-6 text-left">
+                                <div className="flex items-center mb-3">
+                                <span className="text-yellow-500 text-2xl mr-3">🧩</span>
+                                <h4 className="font-bold text-lg">Bisa Customisasi</h4>
+                                </div>
+                                <p className="text-gray-600">
+                                Pilih kapasitas RAM dan SSD sesuai kebutuhan pekerjaan atau kuliahmu.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    </section>
                     {/* SECTION SOP PEMESANAN */}
                     <div className="max-w-full mx-auto mb-4">
                         <section className="rounded-3xl shadow-lg overflow-hidden">
@@ -168,22 +212,6 @@ export default function Home({ popularProducts, newestProducts, products }: { po
                                 alt="SOP Pemesanan Estwo Computer"
                                 className="w-full h-auto" // h-auto menjaga rasio aspek gambar
                             />
-                        </section>
-                    </div>
-
-                    {/* Section Produk Populer & Terbaru */}
-                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                        <section className="rounded-lg bg-white p-4 shadow-lg">
-                            <h3 className="mb-4 text-2xl font-bold text-center">PRODUK TERBAIK</h3>
-                            <div className="grid grid-cols-2 gap-4">
-                                {popularProducts.map(product => <ProductCard key={product.idProduct} product={product} />)}
-                            </div>
-                        </section>
-                        <section className="rounded-lg bg-white p-4 shadow-lg">
-                            <h3 className="mb-4 text-2xl font-bold text-center">PRODUK TERBARU</h3>
-                            <div className="grid grid-cols-2 gap-4">
-                                {newestProducts.map(product => <ProductCard key={product.idProduct} product={product} />)}
-                            </div>
                         </section>
                     </div>
                 </main>
