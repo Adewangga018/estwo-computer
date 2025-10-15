@@ -77,7 +77,7 @@ const ProductCard = ({ product }: { product: Product }) => (
 );
 
 
-export default function Home({ popularProducts, newestProducts, products }: { popularProducts: Product[]; newestProducts: Product[]; products: Product[] }) {
+export default function Home({ products }: { popularProducts: Product[]; newestProducts: Product[]; products: Product[] }) {
     const [showAlert, setShowAlert] = useState(true);
 
     useEffect(() => {
@@ -162,39 +162,60 @@ export default function Home({ popularProducts, newestProducts, products }: { po
                     {/* Section Why Us */}
                     <section className="py-12 bg-gray-50 text-center">
                         <div className="max-w-6xl mx-auto px-4">
-                            <h2 className="text-2xl md:text-3xl font-semibold mb-2">Kenapa Harus Estwo Computer ???</h2>
-                            <p className="text-gray-600 mb-10">
+                            <h2 className="text-3xl md:text-6xl font-semibold mb-2">Kenapa harus</h2>
+                            <h2 className="text-3xl md:text-6xl font-semibold mb-2">Estwo Computer ???</h2>
+                            <p className="text-xl text-gray-600 mb-10">
                             Kami berkomitmen memberikan pengalaman terbaik untuk pembelian laptop bekas berkualitas
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div className="bg-white shadow-md rounded-2xl p-6 text-left">
-                                <div className="flex items-center mb-3">
-                                <span className="text-blue-600 text-2xl mr-3">💰</span>
-                                <h4 className="font-bold text-lg">Harga Terjamin</h4>
+                            <div className="bg-white shadow-md rounded-2xl p-3 text-justify space-y-4">
+                                <div className="flex items-center">
+                                <span className="text-blue-600 text-xl mr-2">💎</span>
+                                <h4 className="font-bold text-xl">Garansi Panjang & Terpercaya</h4>
                                 </div>
                                 <p className="text-gray-600">
-                                Dapatkan harga terbaik sesuai kondisi laptop tanpa mengorbankan kualitas.
+                                Nikmati garansi hardware hingga 1 tahun dan garansi software seumur hidup, karena kami yakin kualitas bukan cuma janji — tapi tanggung jawab kami pada setiap pelanggan.
                                 </p>
                             </div>
 
-                            <div className="bg-white shadow-md rounded-2xl p-6 text-left">
+                            <div className="bg-white shadow-md rounded-2xl p-3 text-justify space-y-4">
                                 <div className="flex items-center mb-3">
-                                <span className="text-green-600 text-2xl mr-3">⚙️</span>
-                                <h4 className="font-bold text-lg">Kualitas Memadai</h4>
+                                <span className="text-blue-600 text-xl mr-2">💰</span>
+                                <h4 className="font-bold text-xl">Harga Termurah, Kualitas Juara</h4>
                                 </div>
                                 <p className="text-gray-600">
-                                Semua unit sudah melalui proses pengecekan hardware dan software secara menyeluruh.
+                                Dapatkan harga terbaik di bawah kompetitor tanpa mengorbankan performa. Kami pastikan setiap produk punya value maksimal untuk setiap rupiah yang kamu keluarkan.
                                 </p>
                             </div>
 
-                            <div className="bg-white shadow-md rounded-2xl p-6 text-left">
+                            <div className="bg-white shadow-md rounded-2xl p-3 text-justify space-y-4">
                                 <div className="flex items-center mb-3">
-                                <span className="text-yellow-500 text-2xl mr-3">🧩</span>
-                                <h4 className="font-bold text-lg">Bisa Customisasi</h4>
+                                <span className="text-blue-600 text-xl mr-2">🧰</span>
+                                <h4 className="font-bold text-xl">Layanan Profesional & Ramah</h4>
                                 </div>
                                 <p className="text-gray-600">
-                                Pilih kapasitas RAM dan SSD sesuai kebutuhan pekerjaan atau kuliahmu.
+                                Tim teknisi berpengalaman siap membantu dengan pelayanan cepat, sopan, dan mudah diakses. Kami bukan sekadar memperbaiki laptop — kami memperbaiki kepercayaan.
+                                </p>
+                            </div>
+
+                            <div className="bg-white shadow-md rounded-2xl p-3 text-justify space-y-4">
+                                <div className="flex items-center mb-3">
+                                <span className="text-blue-600 text-xl mr-2">🔒</span>
+                                <h4 className="font-bold text-xl">Transaksi Aman & Fleksibel</h4>
+                                </div>
+                                <p className="text-gray-600">
+                                Belanja tanpa ragu! Semua transaksi dijamin aman dengan pilihan pembayaran transfer, e-wallet, atau COD. Kami utamakan kenyamananmu dari awal hingga barang sampai di tangan.
+                                </p>
+                            </div>
+
+                            <div className="bg-white shadow-md rounded-2xl p-3 text-justify space-y-4">
+                                <div className="flex items-center mb-3">
+                                <span className="text-blue-600 text-xl mr-2">⚙️</span>
+                                <h4 className="font-bold text-xl">Custom Sesuai Kebutuhanmu</h4>
+                                </div>
+                                <p className="text-gray-600">
+                                Mau upgrade RAM, SSD, atau sistem sesuai pekerjaan dan gaya penggunaanmu? Semua bisa! Kami bantu sesuaikan performa laptop agar benar-benar pas dengan kebutuhanmu.
                                 </p>
                             </div>
                         </div>

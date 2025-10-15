@@ -81,7 +81,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
         specs: '',
         disability: '',
         linkProduct: '',
-        photo: null as File | null,
+        photo: null as File | null | string,
         _method: 'PUT'
     });
 
@@ -104,7 +104,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
             specs: product.specs || '',
             disability: product.disability || '',
             linkProduct: product.linkProduct || '',
-            photo: null,
+            photo: product.photo,
             _method: 'PUT'
         });
         setShowEdit(true);
@@ -199,7 +199,7 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
   <Input
     id="photo"
     type="file"
-    onChange={e => setData('photo', e.target.files ? e.target.files[0] : data.photo)}
+    onChange={e => setData('photo', e.target.files && e.target.files.length > 0 ? e.target.files[0] : selectedProduct?.photo)}
   />
 
   <p className="text-red-500 text-sm mt-1">{errors.photo}</p>
