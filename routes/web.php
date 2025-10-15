@@ -36,7 +36,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
         Route::get('testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
         Route::post('testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');
-        Route::post('testimonials/{testimonial}', [TestimonialController::class, 'update'])->name('testimonials.update'); // Menggunakan POST untuk update agar bisa handle file upload
+        Route::put('testimonials/{testimonial}', [TestimonialController::class, 'update'])->name('testimonials.update'); // Menggunakan POST untuk update agar bisa handle file upload
         Route::delete('testimonials/{testimonial}', [TestimonialController::class, 'destroy'])->name('testimonials.destroy');
 });
 

@@ -69,7 +69,7 @@ type TestimonialFormData = {
 };
 const TestimonialFormModal: React.FC<TestimonialFormModalProps> = ({ testimonial, isOpen, setIsOpen, isEditing }) => {
     const { data, setData, post, progress, errors, reset } = useForm<TestimonialFormData>({
-        _method: isEditing ? 'POST' : 'POST', // Inertia requires POST for file uploads
+        _method: isEditing ? 'PUT' : 'POST', // Inertia requires POST for file uploads
         name: testimonial?.name || '',
         profession: testimonial?.profession || '',
         stars: testimonial?.stars || 1,
@@ -137,6 +137,16 @@ const TestimonialFormModal: React.FC<TestimonialFormModalProps> = ({ testimonial
                     </div>
                     <div>
                         <Label htmlFor="photo">Photo (Optional)</Label>
+                        {isEditing && testimonial?.photo && !data.photo && (
+                            <div className="mt-4">
+                                <p className="text-sm font-medium text-gray-700 mb-2">Foto saat ini</p>
+                                <img
+                                    src={`/storage/${testimonial.photo}`}
+                                    alt="Current testimonial photo"
+                                    className="w-24 h-24 rounded-full object-cover border"
+                                />
+                            </div>
+                        )}
                         <Input
                             id="photo"
                             type="file"
