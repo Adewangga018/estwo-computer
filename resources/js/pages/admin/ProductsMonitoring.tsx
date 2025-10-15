@@ -180,7 +180,30 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
             <div><Label htmlFor="specs">Specifications</Label><Textarea id="specs" value={data.specs} onChange={e => setData('specs', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.specs}</p></div>
             <div><Label htmlFor="disability">Disability</Label><Textarea id="disability" value={data.disability} onChange={e => setData('disability', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.disability}</p></div>
             <div><Label htmlFor="linkProduct">Product Link</Label><Input id="linkProduct" value={data.linkProduct} onChange={e => setData('linkProduct', e.target.value)} /><p className="text-red-500 text-sm mt-1">{errors.linkProduct}</p></div>
-            <div><Label htmlFor="photo">Product Photo</Label><Input id="photo" type="file" onChange={e => setData('photo', e.target.files ? e.target.files[0] : null)} /><p className="text-red-500 text-sm mt-1">{errors.photo}</p></div>
+            <div>
+  <Label htmlFor="photo">Product Photo</Label>
+
+  {/* Preview gambar lama jika ada */}
+  {typeof data.photo === 'string' && (
+    <div className="mb-2">
+      <img
+        src={`/storage/${data.photo}`}
+        alt="Current Product"
+        className="w-24 h-24 object-cover rounded border"
+      />
+      <p className="text-xs text-gray-500 mt-1">Foto saat ini</p>
+    </div>
+  )}
+
+  {/* Input file baru */}
+  <Input
+    id="photo"
+    type="file"
+    onChange={e => setData('photo', e.target.files ? e.target.files[0] : data.photo)}
+  />
+
+  <p className="text-red-500 text-sm mt-1">{errors.photo}</p>
+</div>
         </div>
     );
 
