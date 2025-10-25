@@ -196,6 +196,49 @@ export default function Home({ products }: { popularProducts: Product[]; newestP
                             </Link>
                         </div>
                     </section>
+                    {/* SECTION TENTANG KAMI */}
+                    <section className="bg-white py-16" id="tentang-kami">
+                    <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center gap-10">
+                        {/* FOTO */}
+                        <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="flex-1 flex justify-center"
+                        >
+                        <img
+                            src="/images/estwo-team.jpg" // ubah ke path gambar kamu, contoh: /storage/estwo-team.jpg
+                            alt="Tim ESTWO Computer"
+                            className="rounded-2xl shadow-lg w-full max-w-md object-cover"
+                        />
+                        </motion.div>
+
+                        {/* NARASI */}
+                        <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                        className="flex-1 text-center md:text-left"
+                        >
+                        <h2 className="text-3xl md:text-5xl font-bold mb-2">
+                            <span className="text-gray-800">TENTANG </span>
+                            <span className="text-orange-500">KAMI</span>
+                        </h2>
+                        <p className="text-gray-700 leading-relaxed text-justify">
+                            ESTWO Computer didirikan oleh dua mahasiswa Institut Teknologi Sepuluh Nopember (ITS)
+                            yang memiliki visi untuk menghadirkan solusi digital terbaik bagi masyarakat Surabaya.
+                            Berawal dari semangat kewirausahaan dan keinginan untuk menyediakan laptop second
+                            berkualitas dengan garansi seumur hidup, ESTWO kini berkembang menjadi salah satu
+                            pusat laptop second terpercaya di Surabaya.
+                        </p>
+                        <p className="text-gray-700 leading-relaxed mt-3 text-justify">
+                            Dengan mengusung nilai kejujuran, pelayanan maksimal, dan profesionalitas, kami
+                            berkomitmen untuk membantu pelanggan mendapatkan perangkat terbaik yang sesuai dengan
+                            kebutuhan dan anggaran mereka.
+                        </p>
+                        </motion.div>
+                    </div>
+                    </section>
                     {/* SECTION WHY US */}
                     <section className="relative py-16 bg-gradient-to-b from-orange-50 via-white to-yellow-50 overflow-hidden">
                     {/* Bubble background */}
@@ -206,10 +249,10 @@ export default function Home({ products }: { popularProducts: Product[]; newestP
                     {/* Heading */}
                     <div className="relative text-center mb-12">
                         <h2 className="text-3xl md:text-6xl font-bold text-gray-800 drop-shadow-sm">
-                        Kenapa Harus
+                        KENAPA HARUS
                         </h2>
                         <h2 className="text-3xl md:text-6xl font-bold text-orange-600 drop-shadow-sm">
-                        Estwo Computer?
+                        ESTWO COMPUTER?
                         </h2>
                         <p className="text-gray-700 mt-4 max-w-2xl mx-auto">
                         Kami berkomitmen memberikan pengalaman terbaik untuk pembelian laptop bekas berkualitas tinggi —
@@ -268,8 +311,8 @@ export default function Home({ products }: { popularProducts: Product[]; newestP
                     {/* SECTION SOP PEMESANAN */}
                     <section className="py-12 px-4 md:px-8">
                     <div className="max-w-6xl mx-auto text-center">
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-12">
-                        SOP <span className="text-orange-500">Pemesanan</span>
+                        <h2 className="text-3xl md:text-6xl font-extrabold text-gray-900 mb-12">
+                        SOP <span className="text-orange-500">PEMESANAN</span>
                         </h2>
 
                         {/* Desktop Layout */}
@@ -341,9 +384,10 @@ export default function Home({ products }: { popularProducts: Product[]; newestP
                         })}
                         </div>
 
-                        <p className="mt-12 text-orange-600 font-semibold text-lg">
-                        Garansi Seumur Hidup!
-                        </p>
+                        <h2 className="mt-6 text-2xl md:text-3xl font-extrabold text-gray-900">
+                        GARANSI <span className="text-orange-500">SEUMUR HIDUP!</span>
+                        </h2>
+                        <p className="text-xs font-bold text-gray-400 mt-1">S &amp; K berlaku</p>
                     </div>
                     </section>
                 </main>
