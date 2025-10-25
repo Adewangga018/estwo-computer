@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Home, LayoutGrid, Star, Heart, User, Wrench, HelpCircle, ClipboardCheck
+    Home, LayoutGrid, Star, Heart, User, HelpCircle, ClipboardCheck, Menu
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import {
@@ -73,8 +73,8 @@ export default function MobileBottomNav() {
                             onClick={() => setIsServiceOpen((prev) => !prev)}
                             className="inline-flex flex-col items-center justify-center w-full px-5 text-gray-500 hover:bg-gray-50 group focus:outline-none"
                         >
-                            <Wrench className="w-6 h-6 mb-1 mt-2 text-gray-500 group-hover:text-yellow-600" />
-                            <span className="text-sm group-hover:text-yellow-600">Service</span>
+                            <Menu className="w-6 h-6 mb-1 mt-2 text-gray-500 group-hover:text-yellow-600" />
+                            <span className="text-sm group-hover:text-yellow-600">Menu</span>
                         </button>
 
                         <AnimatePresence>
