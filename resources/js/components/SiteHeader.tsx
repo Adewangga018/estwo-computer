@@ -146,7 +146,7 @@ export default function SiteHeader() {
                                 rel="noopener noreferrer"
                                 className="hover:text-yellow-600"
                                 >
-                                Service
+                                Warranty
                             </a>
                         </div>
                     </div>

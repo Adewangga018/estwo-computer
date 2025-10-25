@@ -307,7 +307,27 @@ export default function ProductsMonitoring({ products }: { products: PaginatedPr
                                 </TableBody>
                             </Table>
                         </div>
+                        {/* Pagination */}
+                        {products && (
+                            <div className="flex flex-wrap justify-center items-center gap-2 mt-6">
+                                {/* Page Numbers */}
+                                {products.links && products.links.map((link: any, idx: number) => (
+                                    link.url ? (
+                                        <Button
+                                            key={idx}
+                                            variant={link.active ? "default" : "outline"}
+                                            size="sm"
+                                            onClick={() => router.visit(link.url)}
+                                            className={link.active ? "font-bold bg-yellow-500 hover:bg-yellow-600" : "bg-gray-200 hover:bg-gray-400"}
+                                            dangerouslySetInnerHTML={{ __html: link.label }}
+                                        />
+                                    ) : (
+                                        <span key={idx} className="px-2 text-gray-400" dangerouslySetInnerHTML={{ __html: link.label }} />
+                                    )
+                                ))}
 
+                            </div>
+                        )}
                         {/* Modal Create */}
                         {showCreate && <div className="fixed inset-0 bg-gray-100 shadow-lg bg-opacity-50 flex items-center justify-center z-50 p-4"><div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"><h2 className="text-2xl font-bold mb-6">Create New Product</h2><form onSubmit={handleCreateSubmit}>{renderFormFields(createData, setCreateData, createErrors)}<div className="flex gap-2 justify-end pt-4"><Button type="button" variant="outline" onClick={closeModal}>Cancel</Button><Button className="bg-yellow-500 hover:bg-yellow-600" type="submit" disabled={createProcessing}>{createProcessing ? 'Creating...' : 'Create'}</Button></div></form></div></div>}
 

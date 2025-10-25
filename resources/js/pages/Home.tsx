@@ -6,6 +6,10 @@ import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { Product } from '@/types/global';
+import { motion } from "framer-motion";
+import { ShoppingBag, MessageCircle, Store, ClipboardCheck, CreditCard, ShieldCheck } from "lucide-react";
+import { ArrowRight, ArrowDown, ArrowLeft } from "lucide-react";
+
 
 // Component untuk menampilkan kartu produk
 const ProductCard = ({ product }: { product: Product }) => (
@@ -75,6 +79,39 @@ const ProductCard = ({ product }: { product: Product }) => (
         </Card>
     </Link>
 );
+
+const steps = [
+    {
+        icon: <ShoppingBag className="w-10 h-10 text-white" />,
+        title: "Pilih Produk",
+        desc: "Pilih produk sesuai kebutuhan Anda",
+    },
+    {
+        icon: <MessageCircle className="w-10 h-10 text-white" />,
+        title: "Hubungi Admin",
+        desc: "Chat dengan admin dan dapatkan jadwal temu",
+    },
+    {
+        icon: <Store className="w-10 h-10 text-white" />,
+        title: "Datang ke Toko",
+        desc: "Datang sesuai janji temu dengan penjual",
+    },
+    {
+        icon: <ClipboardCheck className="w-10 h-10 text-white" />,
+        title: "Cek Barang",
+        desc: "Cek kondisi unit dan lakukan tes fungsi di tempat",
+    },
+    {
+        icon: <CreditCard className="w-10 h-10 text-white" />,
+        title: "Pembayaran",
+        desc: "Lakukan pembayaran dan bawa pulang laptop Anda",
+    },
+    {
+        icon: <ShieldCheck className="w-10 h-10 text-white" />,
+        title: "Garansi",
+        desc: "Nikmati garansi resmi",
+    },
+];
 
 
 export default function Home({ products }: { popularProducts: Product[]; newestProducts: Product[]; products: Product[] }) {
@@ -159,89 +196,156 @@ export default function Home({ products }: { popularProducts: Product[]; newestP
                             </Link>
                         </div>
                     </section>
-                    {/* Section Why Us */}
-                    <section className="py-12 bg-gray-50 text-center w-full">
-                        <div className="mx-auto px-4 md:px-16">
-                            <h2 className="text-3xl md:text-6xl font-semibold mb-2">Kenapa harus</h2>
-                            <h2 className="text-3xl md:text-6xl font-semibold mb-2">Estwo Computer ???</h2>
-                            <p className="text-gray-600 mb-4">
-                            Kami berkomitmen memberikan pengalaman terbaik untuk pembelian laptop bekas berkualitas
-                            </p>
+                    {/* SECTION WHY US */}
+                    <section className="relative py-16 bg-gradient-to-b from-orange-50 via-white to-yellow-50 overflow-hidden">
+                    {/* Bubble background */}
+                    <div className="absolute top-10 left-10 w-24 h-24 rounded-full bg-orange-300/30 blur-3xl animate-[float_8s_ease-in-out_infinite]"></div>
+                    <div className="absolute bottom-20 right-20 w-32 h-32 rounded-full bg-yellow-300/30 blur-3xl animate-[float_10s_ease-in-out_infinite]"></div>
+                    <div className="absolute top-1/3 right-1/4 w-40 h-40 rounded-full bg-red-200/30 blur-3xl animate-[float_12s_ease-in-out_infinite]"></div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div className="bg-white shadow-md rounded-2xl p-3 space-y-4">
-                                <div className="flex items-center">
-                                <span className="text-blue-600 text-xl mr-2">💎</span>
-                                <h4 className="font-bold md:text-xl">Garansi Panjang & Terpercaya</h4>
-                                </div>
-                                <p className="text-gray-600 text-justify">
-                                Nikmati garansi hardware hingga 1 tahun dan garansi software seumur hidup, karena kami yakin kualitas bukan cuma janji — tapi tanggung jawab kami pada setiap pelanggan.
-                                </p>
+                    {/* Heading */}
+                    <div className="relative text-center mb-12">
+                        <h2 className="text-3xl md:text-6xl font-bold text-gray-800 drop-shadow-sm">
+                        Kenapa Harus
+                        </h2>
+                        <h2 className="text-3xl md:text-6xl font-bold text-orange-600 drop-shadow-sm">
+                        Estwo Computer?
+                        </h2>
+                        <p className="text-gray-700 mt-4 max-w-2xl mx-auto">
+                        Kami berkomitmen memberikan pengalaman terbaik untuk pembelian laptop bekas berkualitas tinggi —
+                        dengan layanan, performa, dan kepercayaan sebagai prioritas utama.
+                        </p>
+                    </div>
+
+                    {/* Card Container */}
+                    <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 md:px-16">
+                        {[
+                        {
+                            icon: "💎",
+                            title: "Kualitas Terjamin & Bergaransi",
+                            desc: "Setiap laptop kami dilindungi garansi hardware hingga 1 tahun dan software seumur hidup. Kami pastikan kualitas bukan sekadar janji - tapi tanggung jawab nyata untuk setiap pelanggan.",
+                        },
+                        {
+                            icon: "💰",
+                            title: "Harga Bersahabat, Performa Juara",
+                            desc: "Nikmati harga terbaik tanpa kompromi performa! Kamu bisa dapat laptop berkualitas dengan value maksimal, plus promo menarik seperti cashback hingga 10%.",
+                        },
+                        {
+                            icon: "🧰",
+                            title: "Layanan Lengkap & Fleksibel",
+                            desc: "Mulai dari konsultasi, custom spesifikasi (RAM, SSD, sistem), hingga transaksi yang aman dan mudah — semua kami bantu dengan pelayanan cepat, ramah, dan profesional.",
+                        },
+                        ].map((item, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: index * 0.2 }}
+                            viewport={{ once: true }}
+                            whileHover={{ scale: 1.05 }}
+                            className="relative group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                        >
+                            {/* Glow Gradient Layer */}
+                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-400 to-yellow-400 opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-500"></div>
+
+                            {/* Content */}
+                            <div className="relative z-10 flex flex-col h-full">
+                            {/* Header Card */}
+                            <div className="flex items-center justify-center bg-gradient-to-r from-red-500 via-orange-500 to-yellow-400 text-white py-3 px-4 rounded-t-2xl shadow-md">
+                                <span className="text-2xl mr-2 drop-shadow-sm">{item.icon}</span>
+                                <h4 className="font-bold md:text-xl drop-shadow-sm">{item.title}</h4>
                             </div>
 
-                            <div className="bg-white shadow-md rounded-2xl p-3 space-y-4">
-                                <div className="flex items-center mb-3">
-                                <span className="text-blue-600 text-xl mr-2">💰</span>
-                                <h4 className="font-bold md:text-xl">Harga Termurah, Kualitas Juara</h4>
-                                </div>
-                                <p className="text-gray-600 text-justify">
-                                Dapatkan harga terbaik di bawah kompetitor tanpa mengorbankan performa. Kami pastikan setiap produk punya value maksimal untuk setiap rupiah yang kamu keluarkan.
-                                </p>
+                            {/* Body */}
+                            <div className="p-5 flex-1">
+                                <p className="text-gray-700 text-justify">{item.desc}</p>
                             </div>
-
-                            <div className="bg-white shadow-md rounded-2xl p-3 space-y-4">
-                                <div className="flex items-center mb-3">
-                                <span className="text-blue-600 text-xl mr-2">🧰</span>
-                                <h4 className="font-bold md:text-xl">Layanan Profesional & Ramah</h4>
-                                </div>
-                                <p className="text-gray-600 text-justify">
-                                Tim teknisi berpengalaman siap membantu dengan pelayanan cepat, sopan, dan mudah diakses. Kami bukan sekadar memperbaiki laptop — kami memperbaiki kepercayaan.
-                                </p>
                             </div>
-
-                            <div className="bg-white shadow-md rounded-2xl p-3 space-y-4">
-                                <div className="flex items-center mb-3">
-                                <span className="text-blue-600 text-xl mr-2">🔒</span>
-                                <h4 className="font-bold md:text-xl">Transaksi Aman & Fleksibel</h4>
-                                </div>
-                                <p className="text-gray-600 text-justify">
-                                Belanja tanpa ragu! Semua transaksi dijamin aman dengan pilihan pembayaran transfer, e-wallet, atau COD. Kami utamakan kenyamananmu dari awal hingga barang sampai di tangan.
-                                </p>
-                            </div>
-
-                            <div className="bg-white shadow-md rounded-2xl p-3 space-y-4">
-                                <div className="flex items-center mb-3">
-                                <span className="text-blue-600 text-xl mr-2">⚙️</span>
-                                <h4 className="font-bold md:text-xl">Custom Sesuai Kebutuhanmu</h4>
-                                </div>
-                                <p className="text-gray-600 text-justify">
-                                Mau upgrade RAM, SSD, atau sistem sesuai pekerjaan dan gaya penggunaanmu? Semua bisa! Kami bantu sesuaikan performa laptop agar benar-benar pas dengan kebutuhanmu.
-                                </p>
-                            </div>
-
-                            <div className="bg-white shadow-md rounded-2xl p-3 space-y-4">
-                                <div className="flex items-center mb-3">
-                                <span className="text-blue-600 text-xl mr-2">🎁</span>
-                                <h4 className="font-bold md:text-xl">Cashback Hingga 10%</h4>
-                                </div>
-                                <p className="text-gray-600 text-justify">
-                                Belanja makin hemat! Dapatkan cashback hingga 10% untuk setiap pembelian produk tertentu. Hemat lebih banyak, puas lebih lama.
-                                </p>
-                            </div>
-                        </div>
+                        </motion.div>
+                        ))}
                     </div>
                     </section>
                     {/* SECTION SOP PEMESANAN */}
-                    <div className="max-w-full mx-auto mb-4">
-                        <section className="rounded-3xl shadow-lg overflow-hidden">
-                            {/* Gambar akan menyesuaikan dengan lebar wrapper */}
-                            <img
-                                src="/images/sop-pemesanan.jpg"
-                                alt="SOP Pemesanan Estwo Computer"
-                                className="w-full h-auto" // h-auto menjaga rasio aspek gambar
-                            />
-                        </section>
+                    <section className="py-12 px-4 md:px-8">
+                    <div className="max-w-6xl mx-auto text-center">
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-12">
+                        SOP <span className="text-orange-500">Pemesanan</span>
+                        </h2>
+
+                        {/* Desktop Layout */}
+                        <div className="hidden md:flex items-center justify-between relative">
+                        {steps.map((step, index) => (
+                            <motion.div
+                                key={index}
+                                className="flex flex-col items-center relative group w-48 min-h-[320px] mx-2"
+                                whileHover={{ scale: 1.08 }}
+                                transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                            >
+                                {/* Nomor step besar */}
+                                <div className="flex items-center justify-center mb-3">
+                                    <span className="text-4xl font-extrabold text-orange-400 drop-shadow-lg bg-white rounded-full w-14 h-14 flex items-center justify-center border-4 border-orange-200 shadow-md">
+                                        {index + 1}
+                                    </span>
+                                </div>
+                                <div className="bg-orange-500 rounded-full p-6 shadow-md group-hover:shadow-xl transition-all duration-300 flex items-center justify-center mb-3">
+                                    <span className="w-12 h-12 flex items-center justify-center">{step.icon}</span>
+                                </div>
+                                <h3 className="mt-2 text-xl font-bold text-gray-800 text-center min-h-[48px] flex items-center justify-center">
+                                    {step.title}
+                                </h3>
+                                <p className="text-gray-500 text-base mt-2 max-w-[180px] mx-auto text-center min-h-[48px] flex items-center justify-center">
+                                    {step.desc}
+                                </p>
+
+                                {/* Panah horizontal antar step */}
+                                {index < steps.length - 1 && (
+                                    <div className="absolute right-[-40px] top-[45%] w-20 h-[2px] bg-orange-400">
+                                        <div className="absolute right-0 top-[-4px] w-0 h-0 border-t-4 border-b-4 border-l-8 border-l-orange-400 border-transparent"></div>
+                                    </div>
+                                )}
+                            </motion.div>
+                        ))}
+                        </div>
+
+                        {/* Mobile Layout (2 kolom zig-zag) */}
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:hidden relative">
+                        {steps.map((step, index) => {
+                            const isRight = index % 2 === 1;
+                            const isLastRow = index >= steps.length - 2;
+
+                            return (
+                                <motion.div
+                                    key={index}
+                                    className={`flex flex-col items-center text-center relative group ${
+                                        isRight ? "justify-self-end" : "justify-self-start"
+                                    }`}
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    {/* Nomor step besar */}
+                                    <div className="flex items-center justify-center mb-1">
+                                        <span className="text-2xl font-extrabold text-orange-400 drop-shadow-lg bg-white rounded-full w-9 h-9 flex items-center justify-center border-4 border-orange-200 shadow-md">
+                                            {index + 1}
+                                        </span>
+                                    </div>
+                                    <div className="bg-orange-500 rounded-full p-4 shadow-md group-hover:shadow-lg transition-all duration-300">
+                                        {step.icon}
+                                    </div>
+                                    <h3 className="mt-2 text-sm font-semibold text-gray-800">
+                                        {step.title}
+                                    </h3>
+                                    <p className="text-gray-500 text-xs mt-1 max-w-[120px]">
+                                        {step.desc}
+                                    </p>
+                                </motion.div>
+                            );
+                        })}
+                        </div>
+
+                        <p className="mt-12 text-orange-600 font-semibold text-lg">
+                        Garansi Seumur Hidup!
+                        </p>
                     </div>
+                    </section>
                 </main>
             </div>
         </>
