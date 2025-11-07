@@ -29,6 +29,11 @@ export default function AdminScreen() {
                                 </CardTitle>
                             </Button>
                         </Link>
+                        <Link href={route('admin.dashboardmonitoring')}>
+                            <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white" size="lg">
+                                Dashboard Monitoring
+                            </Button>
+                        </Link>
                          <Link href="/">
                             <Button className="w-full" size="lg" variant="outline">
                                 Back to Home

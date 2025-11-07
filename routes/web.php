@@ -9,6 +9,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\DashboardMonitoringController;
 use Inertia\Inertia;
 
 // Rute Publik
@@ -30,6 +31,9 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Route untuk dashboard utama admin
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    // Route GET untuk Dashboard Monitoring
+    Route::get('/dashboardmonitoring', [DashboardMonitoringController::class, 'dashboardmonitoring'])->name('dashboardmonitoring');
 
     // Resource routes hanya untuk CRUD Products
     Route::resource('products', ProductController::class)->except(['create', 'edit', 'show']);
