@@ -112,6 +112,19 @@ jobs:
             echo "✅ Composer dependencies reinstalled!"
           EOF
 
+      - name: Update APP_NAME in production .env
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+            cd ${{ secrets.DEPLOY_PATH }}
+            # Backup .env file
+            cp .env .env.backup
+            # Update APP_NAME using sed
+            sed -i 's/^APP_NAME=.*/APP_NAME="Estwo Computer"/' .env
+            echo "✅ APP_NAME updated in production .env!"
+            # Show the updated value
+            grep "APP_NAME" .env
+          EOF
+
       - name: Clear and rebuild Laravel caches
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
