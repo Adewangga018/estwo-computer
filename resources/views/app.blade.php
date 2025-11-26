@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        <!-- Primary Meta Tags -->
+        <meta name="title" content="{{ config('app.name', 'Estwo Computer') }}">
+        <meta name="description" content="Toko komputer terpercaya menyediakan laptop, PC, dan aksesoris komputer berkualitas dengan harga terjangkau.">
+
+        <!-- Open Graph / Facebook / WhatsApp -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ config('app.url') }}">
+        <meta property="og:title" content="{{ config('app.name', 'Estwo Computer') }}">
+        <meta property="og:description" content="Toko komputer terpercaya menyediakan laptop, PC, dan aksesoris komputer berkualitas dengan harga terjangkau.">
+        <meta property="og:image" content="{{ asset('favicon.svg') }}">
+        <meta property="og:site_name" content="{{ config('app.name', 'Estwo Computer') }}">
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="{{ config('app.url') }}">
+        <meta property="twitter:title" content="{{ config('app.name', 'Estwo Computer') }}">
+        <meta property="twitter:description" content="Toko komputer terpercaya menyediakan laptop, PC, dan aksesoris komputer berkualitas dengan harga terjangkau.">
+        <meta property="twitter:image" content="{{ asset('favicon.svg') }}">
+
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         {{-- <script>
             (function() {
